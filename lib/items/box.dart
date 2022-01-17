@@ -1,9 +1,10 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:puzzle/map/map.dart';
 import 'package:puzzle/player/dash.dart';
+import 'package:puzzle/utils/destination.dart';
 
 class Box extends GameDecoration with ObjectCollision, Movement {
-  Box(Vector2 position)
+  Box(Vector2 position, this.destination)
       : super.withSprite(
           sprite: Sprite.load('box.png'),
           position: position,
@@ -18,6 +19,9 @@ class Box extends GameDecoration with ObjectCollision, Movement {
       ),
     );
   }
+
+  final Destination destination;
+  bool placed = false;
 
   @override
   bool onCollision(GameComponent component, bool active) {

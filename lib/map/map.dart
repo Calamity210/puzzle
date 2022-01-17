@@ -1,12 +1,18 @@
 import 'dart:math';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:puzzle/items/box.dart';
+import 'package:puzzle/game/level.dart';
 import 'package:puzzle/items/candle.dart';
 import 'package:puzzle/items/portrait.dart';
 
 class GameMap {
   static double tileSize = 50;
+
+  static int px = 0;
+  static int py = 0;
+
+  static List activeSpots = [];
+
   static const wallBottom = 'wall/wall_bottom.png';
   static const wall = 'wall/wall.png';
   static const wallTop = 'wall/wall_top.png';
@@ -24,74 +30,36 @@ class GameMap {
   static MapWorld map() {
     final tileList = <TileModel>[];
 
-    List.generate(35, (row) {
-      List.generate(70, (col) {
-        if (row == 3 && col > 2 && col < 30) {
-          tileList.add(
-            TileModel(
-              sprite: TileModelSprite(path: wallBottom),
-              x: col.toDouble(),
-              y: row.toDouble(),
-              collisions: [
-                CollisionArea.rectangle(size: Vector2(tileSize, tileSize))
-              ],
-              width: tileSize,
-              height: tileSize,
-            ),
-          );
-          return;
-        }
-        if (row == 4 && col > 2 && col < 30) {
-          tileList.add(
-            TileModel(
-              sprite: TileModelSprite(path: wall),
-              x: col.toDouble(),
-              y: row.toDouble(),
-              collisions: [
-                CollisionArea.rectangle(size: Vector2(tileSize, tileSize))
-              ],
-              width: tileSize,
-              height: tileSize,
-            ),
-          );
-          return;
-        }
+    if (Level.currentLevel != null) {
+      tileList.addAll(_getFloors(Level.currentLevel!));
+      tileList.addAll(_getWalls(Level.currentLevel!));
+      tileList.addAll(_getBoxes(Level.currentLevel!));
+    }
 
-        if (row == 9 && col > 2 && col < 30) {
-          tileList.add(
-            TileModel(
-              sprite: TileModelSprite(path: wallTop),
-              x: col.toDouble(),
-              y: row.toDouble(),
-              collisions: [
-                CollisionArea.rectangle(size: Vector2(tileSize, tileSize))
-              ],
-              width: tileSize,
-              height: tileSize,
-            ),
-          );
-          return;
-        }
+    return MapWorld(tileList);
+  }
 
-        if (row > 4 && row < 9 && col > 2 && col < 30) {
+  static List<TileModel> _getFloors(Level level) {
+    final tileList = <TileModel>[];
+
+    for (var i = 0; i < level.nodes.length; i++) {
+      for (var j = 0; j < level.nodes.first.length; j++) {
+        if (!level.nodes[i][j].wall) {
           tileList.add(
             TileModel(
               sprite: TileModelSprite(path: randomFloor()),
-              x: col.toDouble(),
-              y: row.toDouble(),
+              x: i.toDouble(),
+              y: j.toDouble(),
               width: tileSize,
               height: tileSize,
             ),
           );
-          return;
-        }
-
-        if (row > 3 && row < 9 && col == 2) {
+        } else {
           tileList.add(
             TileModel(
-              sprite: TileModelSprite(path: wallLeft),
-              x: col.toDouble(),
-              y: row.toDouble(),
+              sprite: TileModelSprite(path: wall),
+              x: i.toDouble(),
+              y: j.toDouble(),
               collisions: [
                 CollisionArea.rectangle(size: Vector2(tileSize, tileSize))
               ],
@@ -100,12 +68,23 @@ class GameMap {
             ),
           );
         }
-        if (row == 9 && col == 2) {
+      }
+    }
+
+    return tileList;
+  }
+
+  static List<TileModel> _getWalls(Level level) {
+    final tileList = <TileModel>[];
+
+    for (var i = 0; i < level.nodes.length; i++) {
+      for (var j = 0; j < level.nodes.first.length; j++) {
+        if (level.nodes[i][j].wall && !level.surrounded(i, j)) {
           tileList.add(
             TileModel(
-              sprite: TileModelSprite(path: wallBottomLeft),
-              x: col.toDouble(),
-              y: row.toDouble(),
+              sprite: TileModelSprite(path: wall),
+              x: i.toDouble(),
+              y: j.toDouble(),
               collisions: [
                 CollisionArea.rectangle(size: Vector2(tileSize, tileSize))
               ],
@@ -114,37 +93,32 @@ class GameMap {
             ),
           );
         }
+      }
+    }
 
-        if (row > 3 && row < 9 && col == 30) {
-          tileList.add(
-            TileModel(
-              sprite: TileModelSprite(path: wallRight),
-              x: col.toDouble(),
-              y: row.toDouble(),
-              collisions: [
-                CollisionArea.rectangle(size: Vector2(tileSize, tileSize))
-              ],
-              width: tileSize,
-              height: tileSize,
-            ),
-          );
-        }
-      });
-    });
+    return tileList;
+  }
 
-    return MapWorld(tileList);
+  static List<TileModel> _getBoxes(Level level) {
+    final tileList = <TileModel>[];
+    for (final element in level.boxes) {
+      tileList.add(
+        TileModel(
+          sprite: TileModelSprite(path: 'box.png'),
+          x: element.x,
+          y: element.y,
+          width: tileSize,
+          height: tileSize,
+        ),
+      );
+    }
+
+    return tileList;
   }
 
   static List<GameDecoration> decorations() {
     final rand = Random();
     return [
-      for (int i = 0; i < 10; i++)
-        Box(
-          getRelativeTilePosition(
-            rand.nextInt(27) + 3,
-            rand.nextInt(4) + 5,
-          ),
-        ),
       Portrait(
         'dash/grand_dash_pyramids.png',
         getRelativeTilePosition(10, 4),
