@@ -1,8 +1,7 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:flutter/material.dart';
-
-import 'map.dart';
-import 'player_sprite_sheet.dart';
+import 'package:puzzle/map/map.dart';
+import 'package:puzzle/player/dash_sprite_sheet.dart';
 
 class Dash extends SimplePlayer with Lighting, ObjectCollision {
   Dash(Vector2 position)
@@ -24,7 +23,8 @@ class Dash extends SimplePlayer with Lighting, ObjectCollision {
       CollisionConfig(
         collisions: [
           CollisionArea.rectangle(
-            size: Vector2.all(GameMap.tileSize * 0.92),
+            size: Vector2(GameMap.tileSize * 0.92, GameMap.tileSize * 0.46),
+            align: Vector2(0, GameMap.tileSize * 0.46),
           ),
         ],
       ),

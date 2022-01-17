@@ -38,6 +38,15 @@ class PlayerSpriteSheet {
     ),
   );
 
+  static Future<SpriteAnimation> get runUp => SpriteAnimation.load(
+    'dash/dash_run_up.png',
+    SpriteAnimationData.sequenced(
+      amount: 3,
+      stepTime: 0.1,
+      textureSize: Vector2(24, 26),
+    ),
+  );
+
   static Future<SpriteAnimation> get jump => SpriteAnimation.load(
     'dash/dash_jump.png',
     SpriteAnimationData.sequenced(
@@ -52,6 +61,6 @@ class PlayerSpriteSheet {
         idleRight: idle,
         runRight: runRight,
         runDown: runDown,
-        runUp: runDown,
+        runUp: runUp,
       );
 }

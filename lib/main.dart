@@ -1,9 +1,8 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
-import 'utils/map.dart';
-import 'utils/player.dart';
+import 'package:puzzle/map/map.dart';
+import 'package:puzzle/player/dash.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
