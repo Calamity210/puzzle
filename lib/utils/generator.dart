@@ -1,7 +1,5 @@
-import 'package:bonfire/bonfire.dart';
 import 'package:puzzle/game/level.dart';
 import 'package:puzzle/items/box.dart';
-import 'package:puzzle/map/map.dart';
 import 'package:puzzle/pathfinder/node.dart';
 import 'package:puzzle/pathfinder/path.dart';
 import 'package:puzzle/pathfinder/pathfinder.dart';
@@ -12,6 +10,7 @@ void generatePaths(Level level) {
 
   while (level.solvedCount > 0) {
     final boxPaths = calculateBoxPaths(level, ghostBoxes);
+
     final playerPaths = calculatePlayerPaths(level, ghostBoxes, boxPaths);
     final bestPath = playerPaths.bestPath;
     final playerPath = playerPaths.paths[bestPath].path;
@@ -26,8 +25,8 @@ void generatePaths(Level level) {
 
     final curBox = ghostBoxes[bestPath];
     var curNode = boxPath.first;
-    final diffX = (curNode.x - curBox.x).toInt();
-    final diffY = (curNode.y - curBox.y).toInt();
+    final diffX = curNode.x - curBox.position.x;
+    final diffY = curNode.y - curBox.position.y;
     var stop = 0;
 
     if (boxPath.length > 1) {
@@ -47,17 +46,16 @@ void generatePaths(Level level) {
       path.wall = false;
     }
 
-    level.nodes[curBox.x.toInt()][curBox.y.toInt()].occupied = false;
-    curBox.position = Vector2(
-      boxPath[stop].x.toDouble(),
-      boxPath[stop].y.toDouble(),
+    level.nodes[curBox.position.x][curBox.position.y].occupied = false;
+    curBox.position = boxPath[stop];
+    level.nodes[curBox.position.x][curBox.position.y].occupied = true;
+    level.playerPosition = Node(
+      curBox.position.x - diffX,
+      curBox.position.y - diffY,
     );
-    level.nodes[curBox.x.toInt()][curBox.y.toInt()].occupied = true;
-    level.setPlayerPos(
-      Node(curBox.x.toInt() - diffX, curBox.y.toInt() - diffY),
-    );
-    
-    if (curBox.x == curBox.destination.x && curBox.y == curBox.destination.y) {
+
+    if (curBox.position.x == curBox.destination.x &&
+        curBox.position.y == curBox.destination.y) {
       curBox.placed = true;
       level.solvedCount--;
       ghostBoxes.removeAt(bestPath);
@@ -69,38 +67,36 @@ void generatePaths(Level level) {
     }
   }
 
-  level.setPlayerPos(Node(level.playerStartX, level.playerStartY));
-  GameMap.px = level.player.x.toInt();
-  GameMap.py = level.player.y.toInt();
+  level.playerPosition = Node(level.playerStartX, level.playerStartY);
 }
 
-List<Box> copyBoxes(Level level, bool used) {
-  final newBoxes = <Box>[];
+List<BoxData> copyBoxes(Level level, bool used) {
+  final newBoxes = <BoxData>[];
 
   for (final box in level.boxes) {
-    newBoxes.add(box);
-    level.nodes[box.x.toInt()][box.y.toInt()].occupied = true;
-    level.nodes[box.x.toInt()][box.y.toInt()].used = used;
+    newBoxes.add(box.copy());
+    level.nodes[box.position.x][box.position.y].occupied = true;
+    level.nodes[box.position.x][box.position.y].used = used;
   }
 
   return newBoxes;
 }
 
-List<Path> calculateBoxPaths(Level level, List<Box> ghostBoxes) {
+List<Path> calculateBoxPaths(Level level, List<BoxData> ghostBoxes) {
   final boxPaths = <Path>[];
 
   for (final box in ghostBoxes) {
-    level.nodes[box.x.toInt()][box.y.toInt()].occupied = false;
+    level.nodes[box.position.x][box.position.y].occupied = false;
     final solver = Pathfinder(
       level,
-      box.x.toInt(),
-      box.y.toInt(),
+      box.position.x,
+      box.position.y,
       box.destination.x,
       box.destination.y,
     );
 
     boxPaths.add(solver.findPath(true));
-    level.nodes[box.x.toInt()][box.y.toInt()].occupied = true;
+    level.nodes[box.position.x][box.position.y].occupied = true;
   }
 
   return boxPaths;
@@ -108,7 +104,7 @@ List<Path> calculateBoxPaths(Level level, List<Box> ghostBoxes) {
 
 Paths calculatePlayerPaths(
   Level level,
-  List<Box> ghostBoxes,
+  List<BoxData> ghostBoxes,
   List<Path> boxPaths,
 ) {
   final playerPaths = <Path>[];
@@ -116,8 +112,8 @@ Paths calculatePlayerPaths(
   var lowestCost = 100000000;
 
   for (var i = 0; i < ghostBoxes.length; i++) {
-    var newX = ghostBoxes[i].x.toInt();
-    var newY = ghostBoxes[i].y.toInt();
+    var newX = ghostBoxes[i].position.x;
+    var newY = ghostBoxes[i].position.y;
 
     if (boxPaths[i].path.first.x == newX + 1) {
       newX -= 1;
@@ -129,8 +125,8 @@ Paths calculatePlayerPaths(
 
     final solver = Pathfinder(
       level,
-      level.player.x.toInt(),
-      level.player.y.toInt(),
+      level.playerPosition.x,
+      level.playerPosition.y,
       newX,
       newY,
     );

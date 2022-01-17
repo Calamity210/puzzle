@@ -2,14 +2,10 @@ import 'dart:math';
 
 import 'package:bonfire/bonfire.dart';
 import 'package:puzzle/game/level.dart';
-import 'package:puzzle/items/candle.dart';
-import 'package:puzzle/items/portrait.dart';
+import 'package:puzzle/items/box.dart';
 
 class GameMap {
   static double tileSize = 50;
-
-  static int px = 0;
-  static int py = 0;
 
   static List activeSpots = [];
 
@@ -30,11 +26,10 @@ class GameMap {
   static MapWorld map() {
     final tileList = <TileModel>[];
 
-    if (Level.currentLevel != null) {
-      tileList.addAll(_getFloors(Level.currentLevel!));
-      tileList.addAll(_getWalls(Level.currentLevel!));
-      tileList.addAll(_getBoxes(Level.currentLevel!));
-    }
+    tileList.addAll(_getFloors(Level.currentLevel));
+    tileList.addAll(_getWalls(Level.currentLevel));
+    // tileList.addAll(_getBoxes(Level.currentLevel!));
+    tileList.addAll(_getDestinations(Level.currentLevel));
 
     return MapWorld(tileList);
   }
@@ -99,14 +94,15 @@ class GameMap {
     return tileList;
   }
 
-  static List<TileModel> _getBoxes(Level level) {
+  static List<TileModel> _getDestinations(Level level) {
     final tileList = <TileModel>[];
-    for (final element in level.boxes) {
+
+    for (final element in level.destinations) {
       tileList.add(
         TileModel(
-          sprite: TileModelSprite(path: 'box.png'),
-          x: element.x,
-          y: element.y,
+          sprite: TileModelSprite(path: 'floor/floor_8.png'),
+          x: element.x.toDouble(),
+          y: element.y.toDouble(),
           width: tileSize,
           height: tileSize,
         ),
@@ -117,18 +113,14 @@ class GameMap {
   }
 
   static List<GameDecoration> decorations() {
-    final rand = Random();
     return [
-      Portrait(
-        'dash/grand_dash_pyramids.png',
-        getRelativeTilePosition(10, 4),
-      ),
-      Portrait(
-        'dash/grand_dash_space.png',
-        getRelativeTilePosition(25, 4),
-      ),
-      Candle(getRelativeTilePosition(4, 4)),
-      Candle(getRelativeTilePosition(20, 4)),
+      for (final boxData in Level.currentLevel.boxes)
+        Box(
+          Vector2(
+            boxData.position.x * tileSize,
+            boxData.position.y * tileSize,
+          ),
+        ),
     ];
   }
 

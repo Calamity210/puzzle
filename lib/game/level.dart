@@ -1,13 +1,12 @@
 import 'dart:math';
 
-import 'package:bonfire/bonfire.dart';
 import 'package:puzzle/items/box.dart';
 import 'package:puzzle/map/map.dart';
 import 'package:puzzle/pathfinder/node.dart';
-import 'package:puzzle/player/dash.dart';
 import 'package:puzzle/utils/destination.dart';
 import 'package:puzzle/utils/extensions.dart';
 import 'package:puzzle/utils/generator.dart';
+import 'package:puzzle/utils/optimizer.dart';
 
 class Level {
   Level({
@@ -18,7 +17,7 @@ class Level {
     placeObjects(boxesCount);
   }
 
-  static Level? currentLevel;
+  static late Level currentLevel;
 
   final int size;
   final int boxesCount;
@@ -26,11 +25,11 @@ class Level {
   int playerStartX = 0;
   int playerStartY = 0;
 
-  late Dash player;
+  late Node playerPosition;
 
   final List<Node> allowedSpots = [];
   final List<Destination> destinations = [];
-  final List<Box> boxes = [];
+  final List<BoxData> boxes = [];
   final List ghostBoxes = [];
   late int solvedCount = boxesCount;
   final List savedPositions = [];
@@ -45,13 +44,16 @@ class Level {
 
   static void newLevel(int size, int boxesCount) {
     Level.currentLevel = Level(size: size, boxesCount: boxesCount);
-    Level.currentLevel!.rip(Random().nextInt(8) - 2);
-    generatePaths(Level.currentLevel!);
+    Level.currentLevel.rip(Random().nextInt(7) - 2);
+    generatePaths(Level.currentLevel);
 
-    if (Level.currentLevel!.unsolvable) {
+    if (Level.currentLevel.unsolvable) {
       newLevel(size, boxesCount);
     } else {
       GameMap.activeSpots = [];
+      if (boxesCount < 6) {
+        optimizeLevel(Level.currentLevel, Random().nextInt(2000) - 1000);
+      }
     }
   }
 
@@ -66,24 +68,23 @@ class Level {
   void placeObjects(int boxesCount) {
     // Place destinations and boxes
     for (var i = 0; i < boxesCount; i++) {
-      final dPoint = randomPoint();
-
-      if (dPoint != null) {
-        destinations.add(Destination(dPoint.x, dPoint.y));
+      final point = randomPoint();
+      if (point != null) {
+        destinations.add(Destination(point.x, point.y));
       }
     }
 
     for (var i = 0; i < boxesCount; i++) {
-      final bPoint = randomPoint();
+      final point = randomPoint();
 
-      if (bPoint != null) {
+      if (point != null) {
         boxes.add(
-          Box(
-            Vector2(bPoint.x.toDouble(), bPoint.y.toDouble()),
+          BoxData(
+            point,
             destinations[i],
           ),
         );
-        nodes[bPoint.x][bPoint.y].hasBox = true;
+        nodes[point.x][point.y].hasBox = true;
       }
     }
 
@@ -91,9 +92,9 @@ class Level {
     final pPoint =
         randomPoint() ?? Node(destinations.first.x, destinations.first.y);
 
-    player = Dash(Vector2(pPoint.x.toDouble(), pPoint.y.toDouble()));
-    playerStartX = player.position.x.toInt();
-    playerStartY = player.position.y.toInt();
+    playerPosition = Node(pPoint.x, pPoint.y);
+    playerStartX = playerPosition.x;
+    playerStartY = playerPosition.y;
   }
 
   Node? randomPoint() {
@@ -120,9 +121,6 @@ class Level {
       }
     }
   }
-
-  void setPlayerPos(Node node) =>
-      player.position = Vector2(node.x.toDouble(), node.y.toDouble());
 
   bool _blocked(int x, int y) {
     final nextX = nodes[x + 1][y];

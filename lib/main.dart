@@ -13,7 +13,6 @@ Future<void> main() async {
   }
 
   Level.newLevel(10, 3);
-  print(Level.currentLevel!.player.x);
 
   runApp(const MyApp());
 }
@@ -34,6 +33,10 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final lvl = Level.currentLevel;
+    final x = lvl.playerStartX * GameMap.tileSize;
+    final y = lvl.playerStartY * GameMap.tileSize;
+
     return BonfireWidget(
       joystick: Joystick(
         keyboardConfig: KeyboardConfig(),
@@ -42,8 +45,8 @@ class HomePage extends StatelessWidget {
         ),
       ),
       map: GameMap.map(),
-      player: Level.currentLevel!.player,
-      // decorations: GameMap.decorations(),
+      player: Dash(Vector2(x, y)),
+      decorations: GameMap.decorations(),
       lightingColorGame: Colors.black.withOpacity(0.75),
     );
   }
