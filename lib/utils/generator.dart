@@ -42,8 +42,8 @@ void generatePaths(Level level) {
       }
     }
 
-    for (final path in boxPath) {
-      path.wall = false;
+    for (var i = 0; i <= stop; i++) {
+      boxPath[i].wall = false;
     }
 
     level.nodes[curBox.position.x][curBox.position.y].occupied = false;
@@ -61,7 +61,7 @@ void generatePaths(Level level) {
       ghostBoxes.removeAt(bestPath);
     }
     steps++;
-    if (steps > 4000) {
+    if (steps > 2000) {
       level.unsolvable = true;
       break;
     }
@@ -119,6 +119,8 @@ Paths calculatePlayerPaths(
       newX -= 1;
     } else if (boxPaths[i].path.first.x == newX - 1) {
       newX += 1;
+    } else if (boxPaths[i].path.first.y == newY + 1) {
+      newY -= 1;
     } else {
       newY += 1;
     }

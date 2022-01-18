@@ -43,8 +43,6 @@ class _HomePageState extends State<HomePage> {
   late var dash = Dash(Vector2(x, y), restart);
 
   void restart() {
-
-
     setState(() {
       lvl = Level.currentLevel;
       x = lvl.playerStartX * GameMap.tileSize;
@@ -55,6 +53,7 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  @override
   Widget build(BuildContext context) {
     return BonfireWidget(
       joystick: Joystick(

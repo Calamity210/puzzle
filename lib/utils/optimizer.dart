@@ -9,33 +9,33 @@ const optPathCost = 4;
 const optPlayerCost = 4;
 
 void optimizeLevel(Level level, int iterations) {
-  var maxUnnecessary = [];
-  var minDestroyWall = [];
+  var maxUnnecessary = <Node>[];
+  var minDestroyWall = <Node>[];
   var bestPath = 0;
   var steps = 0;
 
   level.playerPosition = Node(level.playerStartX, level.playerStartY);
 
-  var tempPlayerCost = playerPathCost;
+  final tempPlayerCost = playerPathCost;
   playerPathCost = optPlayerCost;
 
   for (var n = 0; n < iterations; n++) {
-    var ghostBoxes = copyBoxes(level, true);
+    final ghostBoxes = copyBoxes(level, true);
     var solveCounter = ghostBoxes.length;
-    var destroyWall = [];
-    var unsolveable = false;
+    final destroyWall = <Node>[];
+    var unsolvable = false;
 
     while (solveCounter > 0) {
-      var tempCost = pathCost;
+      final tempCost = pathCost;
       pathCost = Random().nextInt(optPathCost + 2) - 2;
 
-      var boxPaths = calculateBoxPaths(level, ghostBoxes);
+      final boxPaths = calculateBoxPaths(level, ghostBoxes);
       pathCost = tempCost;
 
-      var playerPaths = calculatePlayerPaths(level, ghostBoxes, boxPaths);
-      var bestPath = Random().nextInt(playerPaths.paths.length);
-      var playerPath = playerPaths.paths[bestPath].path;
-      var boxPath = boxPaths[bestPath].path;
+      final playerPaths = calculatePlayerPaths(level, ghostBoxes, boxPaths).paths;
+      bestPath = Random().nextInt(playerPaths.length);
+      final playerPath = playerPaths[bestPath].path;
+      final boxPath = boxPaths[bestPath].path;
 
       for (final path in playerPath) {
         path.used = true;
@@ -44,10 +44,10 @@ void optimizeLevel(Level level, int iterations) {
         }
       }
 
-      var curBox = ghostBoxes[bestPath];
+      final curBox = ghostBoxes[bestPath];
       var curNode = boxPath.first;
-      var diffX = curNode.x - curBox.position.x;
-      var diffY = curNode.y - curBox.position.y;
+      final diffX = curNode.x - curBox.position.x;
+      final diffY = curNode.y - curBox.position.y;
 
       var stop = 0;
       if (boxPath.length > 1) {
@@ -85,8 +85,8 @@ void optimizeLevel(Level level, int iterations) {
         ghostBoxes.removeAt(bestPath);
       }
       steps++;
-      if (steps > 10000) {
-        unsolveable = true;
+      if (steps > 5000) {
+        unsolvable = true;
         break;
       }
     }
@@ -95,7 +95,7 @@ void optimizeLevel(Level level, int iterations) {
 
     level.nodes[level.playerPosition.x][level.playerPosition.y].used = true;
 
-    var unnecessary = [];
+    final unnecessary = <Node>[];
     for (var i = 0; i < level.nodes.length; i++) {
       for (var j = 0; j < level.nodes[0].length; j++) {
         if (!level.nodes[i][j].wall && !level.nodes[i][j].used) {
@@ -107,7 +107,7 @@ void optimizeLevel(Level level, int iterations) {
       }
     }
 
-    if (!unsolveable &&
+    if (!unsolvable &&
         unnecessary.length - destroyWall.length >
             maxUnnecessary.length - minDestroyWall.length) {
       maxUnnecessary = unnecessary;
