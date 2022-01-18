@@ -28,24 +28,50 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final lvl = Level.currentLevel;
-    final x = lvl.playerStartX * GameMap.tileSize;
-    final y = lvl.playerStartY * GameMap.tileSize;
+  State<HomePage> createState() => _HomePageState();
+}
 
+class _HomePageState extends State<HomePage> {
+  late Level lvl = Level.currentLevel;
+  late double x = lvl.playerStartX * GameMap.tileSize;
+  late double y = lvl.playerStartY * GameMap.tileSize;
+  var map = GameMap.map();
+  late var dash = Dash(Vector2(x, y), restart);
+
+  void restart() {
+
+
+    setState(() {
+      lvl = Level.currentLevel;
+      x = lvl.playerStartX * GameMap.tileSize;
+      y = lvl.playerStartY * GameMap.tileSize;
+      Level.newLevel(10, 3);
+      map = GameMap.map();
+      dash = Dash(Vector2(x, y), restart);
+    });
+  }
+
+  Widget build(BuildContext context) {
     return BonfireWidget(
       joystick: Joystick(
         keyboardConfig: KeyboardConfig(),
         directional: JoystickDirectional(
           isFixed: false,
         ),
+        actions: [
+          JoystickAction(
+            actionId: 1,
+            size: 80,
+            margin: const EdgeInsets.only(bottom: 50, right: 50),
+          ),
+        ],
       ),
-      map: GameMap.map(),
-      player: Dash(Vector2(x, y)),
+      map: map,
+      player: dash,
       decorations: GameMap.decorations(),
       lightingColorGame: Colors.black.withOpacity(0.75),
     );

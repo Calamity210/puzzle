@@ -22,8 +22,9 @@ class Pathfinder {
 
   Path findPath(bool isBox) {
     open.add(nodes[startX][startY]);
+    Node? curNode;
     while (open.isNotEmpty) {
-      final curNode = open.removeAt(0);
+      curNode = open.removeAt(0);
 
       if (curNode.x == endX && curNode.y == endY) {
         open.add(curNode);
@@ -38,7 +39,7 @@ class Pathfinder {
       checkNeighbour(curNode.x, curNode.y - 1, curNode, isBox);
     }
 
-    return sumPath(nodes[startX][startY]);
+    return sumPath(curNode ?? nodes[startX][startY]);
   }
 
   Path sumPath(Node node) {

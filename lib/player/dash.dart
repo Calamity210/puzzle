@@ -1,10 +1,11 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:flutter/material.dart';
+import 'package:puzzle/game/level.dart';
 import 'package:puzzle/map/map.dart';
 import 'package:puzzle/player/dash_sprite_sheet.dart';
 
 class Dash extends SimplePlayer with Lighting, ObjectCollision {
-  Dash(Vector2 position)
+  Dash(Vector2 position, this.onAction)
       : super(
           animation: PlayerSpriteSheet.simpleDirectionAnimation,
           size: Vector2(GameMap.tileSize * 0.92, GameMap.tileSize),
@@ -29,5 +30,15 @@ class Dash extends SimplePlayer with Lighting, ObjectCollision {
         ],
       ),
     );
+  }
+
+  final VoidCallback onAction;
+
+  @override
+  void joystickAction(JoystickActionEvent event) {
+    if (event.id == 1) {
+      onAction.call();
+    }
+    super.joystickAction(event);
   }
 }

@@ -72,14 +72,14 @@ class GameMap {
   static List<TileModel> _getWalls(Level level) {
     final tileList = <TileModel>[];
 
-    for (var i = 0; i < level.nodes.length; i++) {
-      for (var j = 0; j < level.nodes.first.length; j++) {
-        if (level.nodes[i][j].wall && !level.surrounded(i, j)) {
+    for (var x = 0; x < level.nodes.length; x++) {
+      for (var y = 0; y < level.nodes.first.length; y++) {
+        if (level.nodes[x][y].wall && !level.surrounded(x, y)) {
           tileList.add(
             TileModel(
               sprite: TileModelSprite(path: wall),
-              x: i.toDouble(),
-              y: j.toDouble(),
+              x: x.toDouble(),
+              y: y.toDouble(),
               collisions: [
                 CollisionArea.rectangle(size: Vector2(tileSize, tileSize))
               ],
@@ -113,12 +113,17 @@ class GameMap {
   }
 
   static List<GameDecoration> decorations() {
+    for (final boxData in Level.currentLevel.boxes)
+      print('data::: ${getRelativeTilePosition(
+        boxData.position.x,
+        boxData.position.y,
+      )}');
     return [
       for (final boxData in Level.currentLevel.boxes)
         Box(
-          Vector2(
-            boxData.position.x * tileSize,
-            boxData.position.y * tileSize,
+          getRelativeTilePosition(
+            boxData.position.x,
+            boxData.position.y,
           ),
         ),
     ];

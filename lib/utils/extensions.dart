@@ -1,3 +1,5 @@
+import 'package:bonfire/util/direction.dart';
+
 extension TwoDimensionalListExtension on List<List> {
   bool checkBoundaries(int x, int y) =>
       x >= 0 && x < length && y >= 0 && y < first.length;
@@ -29,4 +31,8 @@ extension ListExtension<T> on List<T> {
 
     return -m - 1;
   }
+}
+
+extension DirectionExtension on Direction {
+  Direction get opposite => Direction.values[(index + 3) % 4];
 }

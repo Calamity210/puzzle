@@ -51,7 +51,7 @@ void optimizeLevel(Level level, int iterations) {
 
       var stop = 0;
       if (boxPath.length > 1) {
-        for (var i = 0; i < boxPath.length; i++) {
+        for (var i = 1; i < boxPath.length; i++) {
           final nextNode = boxPath[i];
           if (diffX == nextNode.x - curNode.x &&
               diffY == nextNode.y - curNode.y) {

@@ -32,7 +32,6 @@ class Level {
   final List<BoxData> boxes = [];
   final List ghostBoxes = [];
   late int solvedCount = boxesCount;
-  final List savedPositions = [];
   bool unsolvable = false;
   late final List<List<Node>> nodes = List.generate(
     size,
