@@ -113,11 +113,6 @@ class GameMap {
   }
 
   static List<GameDecoration> decorations() {
-    for (final boxData in Level.currentLevel.boxes)
-      print('data::: ${getRelativeTilePosition(
-        boxData.position.x,
-        boxData.position.y,
-      )}');
     return [
       for (final boxData in Level.currentLevel.boxes)
         Box(
