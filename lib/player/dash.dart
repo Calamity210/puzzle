@@ -1,5 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:flutter/material.dart';
+import 'package:puzzle/game/level.dart';
 import 'package:puzzle/map/map.dart';
 import 'package:puzzle/player/dash_sprite_sheet.dart';
 
@@ -29,5 +30,14 @@ class Dash extends SimplePlayer with Lighting, ObjectCollision {
         ],
       ),
     );
+  }
+
+  @override
+  void joystickAction(JoystickActionEvent event) {
+    if (event.id == 1 && event.event == ActionEvent.UP) {
+      print(Level.currentLevel.player == this);
+      GameMap.solve();
+    }
+    super.joystickAction(event);
   }
 }

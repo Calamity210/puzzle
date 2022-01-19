@@ -5,7 +5,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:puzzle/game/level.dart';
 import 'package:puzzle/map/map.dart';
-import 'package:puzzle/player/dash.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,12 +37,10 @@ class _GamePageState extends State<GamePage> {
     Level.newLevel(10, 3);
   }
 
-  late Level lvl = Level.currentLevel;
-  late double x = lvl.playerStartX * GameMap.tileSize;
-  late double y = lvl.playerStartY * GameMap.tileSize;
-
   @override
   Widget build(BuildContext context) {
+    GameMap.getBoxes();
+
     return BonfireWidget(
       joystick: Joystick(
         keyboardConfig: KeyboardConfig(),
@@ -57,8 +54,8 @@ class _GamePageState extends State<GamePage> {
         ],
       ),
       map: GameMap.map(),
-      player: Dash(Vector2(x, y)),
-      decorations: GameMap.decorations(),
+      player: Level.currentLevel.player,
+      decorations: GameMap.boxes,
       lightingColorGame: Colors.black.withOpacity(0.75),
     );
   }

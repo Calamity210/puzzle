@@ -4,6 +4,7 @@ import 'package:bonfire/bonfire.dart';
 import 'package:puzzle/game/level.dart';
 import 'package:puzzle/items/box.dart';
 import 'package:puzzle/pathfinder/node.dart';
+import 'package:puzzle/utils/generator.dart';
 
 class GameMap {
   static double tileSize = 50;
@@ -24,11 +25,35 @@ class GameMap {
   static const floor7 = 'floor/floor_7.png';
   static const destinationFloor = 'floor/floor_8.png';
 
+  static List<Box> boxes = [];
+
   static MapWorld map() => MapWorld([
         ..._getFloors(Level.currentLevel),
         ..._getWalls(Level.currentLevel),
         ..._getDestinations(Level.currentLevel)
       ]);
+
+  static void solve() {
+    final level = Level.currentLevel;
+    final ghostBoxes = copyBoxes(level, false);
+
+    final boxPaths = calculateBoxPaths(level, ghostBoxes);
+
+    final playerPaths = calculatePlayerPaths(level, ghostBoxes, boxPaths);
+    final bestPath = playerPaths.bestPath;
+    final playerPath = playerPaths.paths[bestPath].path;
+
+    for (final path in playerPath) {
+      level.player.moveToPositionAlongThePath(
+        getRelativeTilePosition(path.x, path.y),
+      );
+    }
+
+    for (final box in boxes)
+      box.moveToPositionAlongThePath(
+        getRelativeTilePosition(box.data.destination.x, box.data.destination.y),
+      );
+  }
 
   static List<TileModel> _getFloors(Level level) {
     final tileList = <TileModel>[];
@@ -96,11 +121,8 @@ class GameMap {
     return tileList;
   }
 
-  static List<GameDecoration> decorations() {
-    return [
-      ...Level.currentLevel.boxes.map((data) => Box(data)).toList(),
-    ];
-  }
+  static void getBoxes() =>
+      boxes = [for (final data in Level.currentLevel.boxes) Box(data)];
 
   static String randomFloor() {
     switch (Random().nextInt(11)) {

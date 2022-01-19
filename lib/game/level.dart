@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:puzzle/items/box.dart';
 import 'package:puzzle/map/map.dart';
 import 'package:puzzle/pathfinder/node.dart';
+import 'package:puzzle/player/dash.dart';
 import 'package:puzzle/utils/destination.dart';
 import 'package:puzzle/utils/extensions.dart';
 import 'package:puzzle/utils/generator.dart';
@@ -26,6 +27,8 @@ class Level {
   int playerStartY = 0;
 
   late Node playerPosition;
+
+  late Dash player;
 
   final List<Node> allowedSpots = [];
   final List<Destination> destinations = [];
@@ -54,6 +57,12 @@ class Level {
       if (boxesCount < 6) {
         optimizeLevel(Level.currentLevel, Random().nextInt(2000) - 1000);
       }
+      Level.currentLevel.player = Dash(
+        GameMap.getRelativeTilePosition(
+          Level.currentLevel.playerStartX,
+          Level.currentLevel.playerStartY,
+        ),
+      );
     }
   }
 

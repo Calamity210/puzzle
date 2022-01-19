@@ -7,7 +7,8 @@ import 'package:puzzle/player/dash.dart';
 import 'package:puzzle/utils/destination.dart';
 import 'package:puzzle/utils/extensions.dart';
 
-class Box extends GameDecoration with ObjectCollision, Movement, Lighting {
+class Box extends GameDecoration
+    with ObjectCollision, Movement, MoveToPositionAlongThePath, Lighting {
   Box(this.data)
       : super.withSprite(
           sprite: Sprite.load('box.png'),
@@ -60,7 +61,8 @@ class Box extends GameDecoration with ObjectCollision, Movement, Lighting {
   }
 
   void checkForWin() {
-    if (!Level.currentLevel.boxes.any((d) => !d.placed) && !Level.currentLevel.solved) {
+    if (!Level.currentLevel.boxes.any((d) => !d.placed) &&
+        !Level.currentLevel.solved) {
       Level.currentLevel.solved = true;
       print('WIN');
     }
