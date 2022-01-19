@@ -140,8 +140,8 @@ class Level {
   }
 
   bool surrounded(int x, int y) {
-    for (var i = x - 1; i <= x; i++) {
-      for (var j = y - 1; j <= y; j++) {
+    for (var i = x - 1; i <= x + 1; i++) {
+      for (var j = y - 1; j <= y + 1; j++) {
         if (nodes.checkBoundaries(i, j) && !nodes[i][j].wall) {
           return false;
         }

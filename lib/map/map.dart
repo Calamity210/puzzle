@@ -3,18 +3,15 @@ import 'dart:math';
 import 'package:bonfire/bonfire.dart';
 import 'package:puzzle/game/level.dart';
 import 'package:puzzle/items/box.dart';
+import 'package:puzzle/pathfinder/node.dart';
 
 class GameMap {
   static double tileSize = 50;
 
   static List activeSpots = [];
+  static List<Node> walls = [];
 
-  static const wallBottom = 'wall/wall_bottom.png';
   static const wall = 'wall/wall.png';
-  static const wallTop = 'wall/wall_top.png';
-  static const wallLeft = 'wall/wall_left.png';
-  static const wallBottomLeft = 'wall/wall_bottom_left.png';
-  static const wallRight = 'wall/wall_right.png';
   static const floor_1 = 'floor/floor_1.png';
   static const floor_2 = 'floor/floor_2.png';
   static const floor_3 = 'floor/floor_3.png';
@@ -23,16 +20,11 @@ class GameMap {
   static const floor_6 = 'floor/floor_6.png';
   static const floor_7 = 'floor/floor_7.png';
 
-  static MapWorld map() {
-    final tileList = <TileModel>[];
-
-    tileList.addAll(_getFloors(Level.currentLevel));
-    tileList.addAll(_getWalls(Level.currentLevel));
-    // tileList.addAll(_getBoxes(Level.currentLevel!));
-    tileList.addAll(_getDestinations(Level.currentLevel));
-
-    return MapWorld(tileList);
-  }
+  static MapWorld map() => MapWorld([
+        ..._getFloors(Level.currentLevel),
+        ..._getWalls(Level.currentLevel),
+        ..._getDestinations(Level.currentLevel)
+      ]);
 
   static List<TileModel> _getFloors(Level level) {
     final tileList = <TileModel>[];
@@ -45,19 +37,6 @@ class GameMap {
               sprite: TileModelSprite(path: randomFloor()),
               x: i.toDouble(),
               y: j.toDouble(),
-              width: tileSize,
-              height: tileSize,
-            ),
-          );
-        } else {
-          tileList.add(
-            TileModel(
-              sprite: TileModelSprite(path: wall),
-              x: i.toDouble(),
-              y: j.toDouble(),
-              collisions: [
-                CollisionArea.rectangle(size: Vector2(tileSize, tileSize))
-              ],
               width: tileSize,
               height: tileSize,
             ),
@@ -75,6 +54,7 @@ class GameMap {
     for (var x = 0; x < level.nodes.length; x++) {
       for (var y = 0; y < level.nodes.first.length; y++) {
         if (level.nodes[x][y].wall && !level.surrounded(x, y)) {
+          walls.add(level.nodes[x][y]);
           tileList.add(
             TileModel(
               sprite: TileModelSprite(path: wall),
@@ -97,12 +77,13 @@ class GameMap {
   static List<TileModel> _getDestinations(Level level) {
     final tileList = <TileModel>[];
 
-    for (final element in level.destinations) {
+    for (final destination in level.destinations) {
       tileList.add(
         TileModel(
+          type: 'destination',
           sprite: TileModelSprite(path: 'floor/floor_8.png'),
-          x: element.x.toDouble(),
-          y: element.y.toDouble(),
+          x: destination.x.toDouble(),
+          y: destination.y.toDouble(),
           width: tileSize,
           height: tileSize,
         ),

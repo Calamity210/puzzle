@@ -1,12 +1,12 @@
-import 'dart:math';
-
 import 'package:bonfire/bonfire.dart';
+import 'package:flutter/material.dart';
+import 'package:puzzle/game/level.dart';
 import 'package:puzzle/map/map.dart';
 import 'package:puzzle/pathfinder/node.dart';
 import 'package:puzzle/player/dash.dart';
 import 'package:puzzle/utils/destination.dart';
 
-class Box extends GameDecoration with ObjectCollision, Movement {
+class Box extends GameDecoration with ObjectCollision, Movement, Lighting {
   Box(Vector2 position)
       : super.withSprite(
           sprite: Sprite.load('box.png'),
@@ -14,6 +14,9 @@ class Box extends GameDecoration with ObjectCollision, Movement {
           size: Vector2.all(GameMap.tileSize * 0.9),
         ) {
     speed = 128;
+
+    setLighting();
+
     setupCollision(
       CollisionConfig(
         collisions: [
@@ -21,6 +24,33 @@ class Box extends GameDecoration with ObjectCollision, Movement {
         ],
       ),
     );
+  }
+
+  void setLighting() {
+    setupLighting(
+      LightingConfig(
+        radius: width * 1,
+        blurBorder: width,
+        withPulse: true,
+        pulseVariation: 0.2,
+        pulseSpeed: 0.5,
+        pulseCurve: Curves.linear,
+        color: Colors.orange.withOpacity(0.2),
+      ),
+    );
+  }
+
+  bool checkIfSolved(Destination d) {
+    final x = d.x * GameMap.tileSize;
+    final xEnd = x + GameMap.tileSize;
+    final y = d.y * GameMap.tileSize;
+    final yEnd = y + GameMap.tileSize;
+    final boxEnd = position + Vector2.all(GameMap.tileSize * 0.9);
+
+    return position.x == position.x.clamp(x, xEnd) &&
+        position.y == position.y.clamp(y, yEnd) &&
+        boxEnd.x == boxEnd.x.clamp(x, xEnd) &&
+        boxEnd.y == boxEnd.y.clamp(y, yEnd);
   }
 
   @override
@@ -40,7 +70,13 @@ class Box extends GameDecoration with ObjectCollision, Movement {
           moveUp(speed);
           break;
         default:
-          return false;
+          break;
+      }
+
+      if (Level.currentLevel.destinations.any(checkIfSolved)) {
+        setupLighting(null);
+      } else {
+        setLighting();
       }
 
       return true;

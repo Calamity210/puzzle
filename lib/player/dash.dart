@@ -15,8 +15,8 @@ class Dash extends SimplePlayer with Lighting, ObjectCollision {
         ) {
     setupLighting(
       LightingConfig(
-        radius: width * 1.5,
-        blurBorder: width * 1.5,
+        radius: width,
+        blurBorder: width,
         color: Colors.transparent,
       ),
     );

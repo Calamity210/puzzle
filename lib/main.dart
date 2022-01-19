@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:bonfire/bonfire.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -12,20 +14,13 @@ Future<void> main() async {
     await Flame.device.fullScreen();
   }
 
+  if (kIsWeb || !Platform.isAndroid && !Platform.isIOS) {
+    GameMap.tileSize = 100;
+  }
+
   Level.newLevel(10, 3);
 
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: HomePage(),
-    );
-  }
+  runApp(const MaterialApp(home: HomePage()));
 }
 
 class HomePage extends StatefulWidget {
@@ -58,9 +53,7 @@ class _HomePageState extends State<HomePage> {
     return BonfireWidget(
       joystick: Joystick(
         keyboardConfig: KeyboardConfig(),
-        directional: JoystickDirectional(
-          isFixed: false,
-        ),
+        directional: JoystickDirectional(isFixed: false),
         actions: [
           JoystickAction(
             actionId: 1,

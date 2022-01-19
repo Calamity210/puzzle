@@ -6,8 +6,8 @@ class Portrait extends GameDecoration with Lighting {
   Portrait(String sprite, Vector2 position)
       : super.withSprite(
           sprite: Sprite.load(sprite),
-          position: position,
-          size: Vector2(GameMap.tileSize * 1.25, GameMap.tileSize * 0.75),
+          position: position + Vector2(GameMap.tileSize * 0.05, GameMap.tileSize * 0.125),
+          size: Vector2(GameMap.tileSize * 0.9, GameMap.tileSize * 0.75),
         ) {
     setupLighting(
       LightingConfig(

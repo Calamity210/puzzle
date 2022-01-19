@@ -13,8 +13,9 @@ class Candle extends GameDecoration with Lighting {
               textureSize: Vector2(19, 26),
             ),
           ),
-          position: position,
-          size: Vector2((GameMap.tileSize * 0.75) * 0.73, GameMap.tileSize * 0.75),
+          position: position +
+              Vector2(GameMap.tileSize * 0.225, GameMap.tileSize * 0.125),
+          size: Vector2(GameMap.tileSize * 0.55, GameMap.tileSize * 0.75),
         ) {
     setupLighting(
       LightingConfig(
