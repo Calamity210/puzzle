@@ -5,12 +5,16 @@ import 'package:puzzle/map/map.dart';
 import 'package:puzzle/pathfinder/node.dart';
 import 'package:puzzle/player/dash.dart';
 import 'package:puzzle/utils/destination.dart';
+import 'package:puzzle/utils/extensions.dart';
 
 class Box extends GameDecoration with ObjectCollision, Movement, Lighting {
-  Box(Vector2 position)
+  Box(this.data)
       : super.withSprite(
           sprite: Sprite.load('box.png'),
-          position: position + Vector2.all(GameMap.tileSize * 0.05),
+          position: data.position.vector2 +
+              Vector2.all(
+                GameMap.tileSize * 0.05,
+              ),
           size: Vector2.all(GameMap.tileSize * 0.9),
         ) {
     speed = 128;
@@ -26,10 +30,12 @@ class Box extends GameDecoration with ObjectCollision, Movement, Lighting {
     );
   }
 
+  final BoxData data;
+
   void setLighting() {
     setupLighting(
       LightingConfig(
-        radius: width * 1,
+        radius: width,
         blurBorder: width,
         withPulse: true,
         pulseVariation: 0.2,
@@ -51,6 +57,13 @@ class Box extends GameDecoration with ObjectCollision, Movement, Lighting {
         position.y == position.y.clamp(y, yEnd) &&
         boxEnd.x == boxEnd.x.clamp(x, xEnd) &&
         boxEnd.y == boxEnd.y.clamp(y, yEnd);
+  }
+
+  void checkForWin() {
+    if (!Level.currentLevel.boxes.any((d) => !d.placed) && !Level.currentLevel.solved) {
+      Level.currentLevel.solved = true;
+      print('WIN');
+    }
   }
 
   @override
@@ -75,8 +88,11 @@ class Box extends GameDecoration with ObjectCollision, Movement, Lighting {
 
       if (Level.currentLevel.destinations.any(checkIfSolved)) {
         setupLighting(null);
+        data.placed = true;
+        checkForWin();
       } else {
         setLighting();
+        data.placed = false;
       }
 
       return true;

@@ -1,4 +1,6 @@
-import 'package:bonfire/util/direction.dart';
+import 'package:bonfire/bonfire.dart';
+import 'package:puzzle/map/map.dart';
+import 'package:puzzle/pathfinder/node.dart';
 
 extension TwoDimensionalListExtension on List<List> {
   bool checkBoundaries(int x, int y) =>
@@ -33,6 +35,6 @@ extension ListExtension<T> on List<T> {
   }
 }
 
-extension DirectionExtension on Direction {
-  Direction get opposite => Direction.values[(index + 3) % 4];
+extension NodeExtensions on Node {
+  Vector2 get vector2 => GameMap.getRelativeTilePosition(x, y);
 }

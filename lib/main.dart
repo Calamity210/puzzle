@@ -20,33 +20,27 @@ Future<void> main() async {
 
   Level.newLevel(10, 3);
 
-  runApp(const MaterialApp(home: HomePage()));
+  runApp(const MaterialApp(home: GamePage()));
 }
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class GamePage extends StatefulWidget {
+  const GamePage({Key? key}) : super(key: key);
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<GamePage> createState() => _GamePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _GamePageState extends State<GamePage> {
+
+  @override
+  void initState() {
+    super.initState();
+    Level.newLevel(10, 3);
+  }
+
   late Level lvl = Level.currentLevel;
   late double x = lvl.playerStartX * GameMap.tileSize;
   late double y = lvl.playerStartY * GameMap.tileSize;
-  var map = GameMap.map();
-  late var dash = Dash(Vector2(x, y), restart);
-
-  void restart() {
-    setState(() {
-      lvl = Level.currentLevel;
-      x = lvl.playerStartX * GameMap.tileSize;
-      y = lvl.playerStartY * GameMap.tileSize;
-      Level.newLevel(10, 3);
-      map = GameMap.map();
-      dash = Dash(Vector2(x, y), restart);
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,8 +56,8 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      map: map,
-      player: dash,
+      map: GameMap.map(),
+      player: Dash(Vector2(x, y)),
       decorations: GameMap.decorations(),
       lightingColorGame: Colors.black.withOpacity(0.75),
     );

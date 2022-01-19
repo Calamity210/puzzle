@@ -12,13 +12,17 @@ class GameMap {
   static List<Node> walls = [];
 
   static const wall = 'wall/wall.png';
-  static const floor_1 = 'floor/floor_1.png';
-  static const floor_2 = 'floor/floor_2.png';
-  static const floor_3 = 'floor/floor_3.png';
-  static const floor_4 = 'floor/floor_4.png';
-  static const floor_5 = 'floor/floor_5.png';
-  static const floor_6 = 'floor/floor_6.png';
-  static const floor_7 = 'floor/floor_7.png';
+  static const wallMossy = 'wall/wall_mossy.png';
+  static const wallCracked1 = 'wall/wall_cracked1.png';
+  static const wallCracked2 = 'wall/wall_cracked2.png';
+  static const floor1 = 'floor/floor_1.png';
+  static const floor2 = 'floor/floor_2.png';
+  static const floor3 = 'floor/floor_3.png';
+  static const floor4 = 'floor/floor_4.png';
+  static const floor5 = 'floor/floor_5.png';
+  static const floor6 = 'floor/floor_6.png';
+  static const floor7 = 'floor/floor_7.png';
+  static const destinationFloor = 'floor/floor_8.png';
 
   static MapWorld map() => MapWorld([
         ..._getFloors(Level.currentLevel),
@@ -57,7 +61,7 @@ class GameMap {
           walls.add(level.nodes[x][y]);
           tileList.add(
             TileModel(
-              sprite: TileModelSprite(path: wall),
+              sprite: TileModelSprite(path: randomWall()),
               x: x.toDouble(),
               y: y.toDouble(),
               collisions: [
@@ -80,8 +84,7 @@ class GameMap {
     for (final destination in level.destinations) {
       tileList.add(
         TileModel(
-          type: 'destination',
-          sprite: TileModelSprite(path: 'floor/floor_8.png'),
+          sprite: TileModelSprite(path: destinationFloor),
           x: destination.x.toDouble(),
           y: destination.y.toDouble(),
           width: tileSize,
@@ -95,36 +98,43 @@ class GameMap {
 
   static List<GameDecoration> decorations() {
     return [
-      for (final boxData in Level.currentLevel.boxes)
-        Box(
-          getRelativeTilePosition(
-            boxData.position.x,
-            boxData.position.y,
-          ),
-        ),
+      ...Level.currentLevel.boxes.map((data) => Box(data)).toList(),
     ];
   }
 
   static String randomFloor() {
     switch (Random().nextInt(11)) {
       case 1:
-        return floor_2;
+        return floor2;
       case 2:
       case 3:
-        return floor_3;
+        return floor3;
       case 4:
       case 5:
-        return floor_4;
+        return floor4;
       case 6:
-        return floor_5;
+        return floor5;
       case 7:
       case 8:
-        return floor_6;
+        return floor6;
       case 9:
-        return floor_7;
+        return floor7;
 
       default:
-        return floor_1;
+        return floor1;
+    }
+  }
+
+  static String randomWall() {
+    switch (Random().nextInt(21)) {
+      case 1:
+        return wallMossy;
+      case 2:
+        return wallCracked1;
+      case 3:
+        return wallCracked2;
+      default:
+        return wall;
     }
   }
 

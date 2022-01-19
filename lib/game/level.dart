@@ -33,6 +33,7 @@ class Level {
   final List ghostBoxes = [];
   late int solvedCount = boxesCount;
   bool unsolvable = false;
+  bool solved = false;
   late final List<List<Node>> nodes = List.generate(
     size,
     (i) => List.generate(
