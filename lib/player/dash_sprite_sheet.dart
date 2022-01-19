@@ -14,8 +14,8 @@ class PlayerSpriteSheet {
   static Future<SpriteAnimation> get runRight => SpriteAnimation.load(
     'dash/dash_run_right.png',
     SpriteAnimationData.sequenced(
-      amount: 3,
-      stepTime: 0.1,
+      amount: 10,
+      stepTime: 0.03,
       textureSize: Vector2(24, 26),
     ),
   );
@@ -32,8 +32,8 @@ class PlayerSpriteSheet {
   static Future<SpriteAnimation> get runLeft => SpriteAnimation.load(
     'dash/dash_run_left.png',
     SpriteAnimationData.sequenced(
-      amount: 3,
-      stepTime: 0.1,
+      amount: 10,
+      stepTime: 0.03,
       textureSize: Vector2(24, 26),
     ),
   );
