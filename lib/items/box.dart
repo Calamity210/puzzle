@@ -33,6 +33,21 @@ class Box extends GameDecoration
 
   final BoxData data;
 
+  @override
+  set position(Vector2 position) {
+    transform.position = position;
+    if (Level.currentLevel.destinations.any(checkIfSolved)) {
+      setupLighting(null);
+      data.placed = true;
+      checkForWin();
+    } else {
+      setLighting();
+      data.placed = false;
+      data.placedOn?.placed = false;
+      data.placedOn = null;
+    }
+  }
+
   void setLighting() {
     setupLighting(
       LightingConfig(
@@ -47,6 +62,18 @@ class Box extends GameDecoration
     );
   }
 
+  void reset() {
+    position = data.position.vector2 +
+        Vector2.all(
+          GameMap.tileSize * 0.05,
+        );
+    data.placed = false;
+    data.destination.placed = false;
+    data.placedOn?.placed = false;
+    data.placedOn = null;
+    setLighting();
+  }
+
   bool checkIfSolved(Destination d) {
     final x = d.x * GameMap.tileSize;
     final xEnd = x + GameMap.tileSize;
@@ -54,10 +81,16 @@ class Box extends GameDecoration
     final yEnd = y + GameMap.tileSize;
     final boxEnd = position + Vector2.all(GameMap.tileSize * 0.9);
 
-    return position.x == position.x.clamp(x, xEnd) &&
+    if (position.x == position.x.clamp(x, xEnd) &&
         position.y == position.y.clamp(y, yEnd) &&
         boxEnd.x == boxEnd.x.clamp(x, xEnd) &&
-        boxEnd.y == boxEnd.y.clamp(y, yEnd);
+        boxEnd.y == boxEnd.y.clamp(y, yEnd)) {
+      d.placed = true;
+      data.placedOn = d;
+      return true;
+    }
+
+    return false;
   }
 
   void checkForWin() {
@@ -88,15 +121,6 @@ class Box extends GameDecoration
           break;
       }
 
-      if (Level.currentLevel.destinations.any(checkIfSolved)) {
-        setupLighting(null);
-        data.placed = true;
-        checkForWin();
-      } else {
-        setLighting();
-        data.placed = false;
-      }
-
       return true;
     }
 
@@ -110,6 +134,7 @@ class BoxData {
   Node position;
   final Destination destination;
   bool placed;
+  Destination? placedOn;
 
   BoxData copy() => BoxData(position, destination, placed);
 }

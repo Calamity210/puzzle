@@ -3,4 +3,5 @@ class Destination {
 
   final int x;
   final int y;
+  bool placed = false;
 }

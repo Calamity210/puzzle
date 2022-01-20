@@ -1,6 +1,8 @@
 import 'dart:math';
 
+import 'package:bonfire/base/bonfire_game_interface.dart';
 import 'package:bonfire/bonfire.dart';
+import 'package:flutter/material.dart';
 import 'package:puzzle/game/level.dart';
 import 'package:puzzle/items/box.dart';
 import 'package:puzzle/pathfinder/node.dart';
@@ -32,14 +34,39 @@ class GameMap {
         ..._getDestinations(Level.currentLevel)
       ]);
 
-  static void solve() {
+  static void solve(BonfireGameInterface gameRef) {
+    final level = Level.currentLevel;
     if (boxes.any((b) => !b.data.placed)) {
       final box = boxes.firstWhere((b) => !b.data.placed);
+      final destination = level.destinations.firstWhere((d) => !d.placed);
+      final curPos = box.position;
+
       box.moveToPositionAlongThePath(
-        getRelativeTilePosition(box.data.destination.x, box.data.destination.y),
+        getRelativeTilePosition(destination.x, destination.y),
       );
-      box.data.placed = true;
-      box.setupLighting(null);
+
+      if (!box.isMovingAlongThePath) {
+        TalkDialog.show(
+          gameRef.context,
+          [
+            Say(
+              text: [
+                const TextSpan(
+                  text: "Hmm... I can't seem to reach the destination point",
+                ),
+              ],
+            ),
+            Say(
+              text: [
+                const TextSpan(
+                  text: 'Are you blocking the way?',
+                ),
+              ],
+            ),
+          ],
+          dismissible: true,
+        );
+      }
     }
   }
 

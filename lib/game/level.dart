@@ -87,12 +87,7 @@ class Level {
       final point = randomPoint();
 
       if (point != null) {
-        boxes.add(
-          BoxData(
-            point,
-            destinations[i],
-          ),
-        );
+        boxes.add(BoxData(point, destinations[i]));
         nodes[point.x][point.y].hasBox = true;
       }
     }

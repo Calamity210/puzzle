@@ -30,7 +30,6 @@ class GamePage extends StatefulWidget {
 }
 
 class _GamePageState extends State<GamePage> {
-
   @override
   void initState() {
     super.initState();
@@ -47,9 +46,17 @@ class _GamePageState extends State<GamePage> {
         directional: JoystickDirectional(isFixed: false),
         actions: [
           JoystickAction(
-            actionId: 1,
+            actionId: 'help',
+            sprite: Sprite.load('box_help.png'),
             size: 80,
             margin: const EdgeInsets.only(bottom: 50, right: 50),
+          ),
+          JoystickAction(
+            actionId: 'restart',
+            sprite: Sprite.load('restart.png'),
+            size: 80,
+            margin: const EdgeInsets.only(top: 50, left: 50),
+            align: JoystickActionAlign.TOP_LEFT,
           ),
         ],
       ),
