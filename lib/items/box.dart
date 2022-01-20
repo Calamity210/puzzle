@@ -1,7 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:flutter/material.dart';
 import 'package:puzzle/game/level.dart';
-import 'package:puzzle/map/map.dart';
 import 'package:puzzle/pathfinder/node.dart';
 import 'package:puzzle/player/dash.dart';
 import 'package:puzzle/utils/destination.dart';
@@ -9,14 +8,12 @@ import 'package:puzzle/utils/extensions.dart';
 
 class Box extends GameDecoration
     with ObjectCollision, Movement, MoveToPositionAlongThePath, Lighting {
-  Box(this.data)
+  Box(this.data, this.level, this.tileSize)
       : super.withSprite(
           sprite: Sprite.load('box.png'),
-          position: data.position.vector2 +
-              Vector2.all(
-                GameMap.tileSize * 0.05,
-              ),
-          size: Vector2.all(GameMap.tileSize * 0.9),
+          position:
+              data.position.vector2(tileSize) + Vector2.all(tileSize * 0.05),
+          size: Vector2.all(tileSize * 0.9),
         ) {
     speed = 128;
 
@@ -25,19 +22,21 @@ class Box extends GameDecoration
     setupCollision(
       CollisionConfig(
         collisions: [
-          CollisionArea.rectangle(size: Vector2.all(GameMap.tileSize * 0.9)),
+          CollisionArea.rectangle(size: Vector2.all(tileSize * 0.9)),
         ],
       ),
     );
   }
 
+  final Level level;
+  final double tileSize;
   final BoxData data;
   bool messageShown = false;
 
   @override
   set position(Vector2 position) {
     transform.position = position;
-    if (Level.current.destinations.any(checkIfSolved)) {
+    if (level.destinations.any(checkIfSolved)) {
       setupLighting(null);
       data.placed = true;
       checkForWin();
@@ -48,8 +47,6 @@ class Box extends GameDecoration
       data.placedOn = null;
     }
   }
-
-
 
   void setLighting() {
     setupLighting(
@@ -66,10 +63,7 @@ class Box extends GameDecoration
   }
 
   void reset() {
-    position = data.position.vector2 +
-        Vector2.all(
-          GameMap.tileSize * 0.05,
-        );
+    position = data.position.vector2(tileSize) + Vector2.all(tileSize * 0.05);
     data.placed = false;
     data.destination.placed = false;
     data.placedOn?.placed = false;
@@ -78,11 +72,11 @@ class Box extends GameDecoration
   }
 
   bool checkIfSolved(Destination d) {
-    final x = d.x * GameMap.tileSize;
-    final xEnd = x + GameMap.tileSize;
-    final y = d.y * GameMap.tileSize;
-    final yEnd = y + GameMap.tileSize;
-    final boxEnd = position + Vector2.all(GameMap.tileSize * 0.9);
+    final x = d.x * tileSize;
+    final xEnd = x + tileSize;
+    final y = d.y * tileSize;
+    final yEnd = y + tileSize;
+    final boxEnd = position + Vector2.all(tileSize * 0.9);
 
     if (position.x == position.x.clamp(x, xEnd) &&
         position.y == position.y.clamp(y, yEnd) &&
@@ -97,9 +91,9 @@ class Box extends GameDecoration
   }
 
   void checkForWin() {
-    if (!Level.current.boxes.any((d) => !d.placed) && !Level.current.solved) {
-      Level.current.solved = true;
-      print('WIN');
+    if (!level.boxes.any((d) => !d.placed) && !level.solved) {
+      level.solved = true;
+      Navigator.of(gameRef.context).pop();
     }
   }
 
@@ -127,7 +121,7 @@ class Box extends GameDecoration
         ],
         dismissible: true,
       );
-    } else  if (component is Dash) {
+    } else if (component is Dash) {
       switch (getComponentDirectionFromMe(component)) {
         case Direction.left:
           moveRight(speed);

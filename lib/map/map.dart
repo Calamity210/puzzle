@@ -8,34 +8,39 @@ import 'package:puzzle/items/box.dart';
 import 'package:puzzle/pathfinder/node.dart';
 
 class GameMap {
-  static double tileSize = 50;
+  GameMap({required this.level, this.tileSize = 50}) {
+    boxes = [
+      for (final data in level.boxes) Box(data, level, tileSize),
+    ];
+  }
 
-  static List activeSpots = [];
-  static List<Node> walls = [];
+  final Level level;
+  final double tileSize;
 
-  static const wall = 'wall/wall.png';
-  static const wallMossy = 'wall/wall_mossy.png';
-  static const wallCracked1 = 'wall/wall_cracked1.png';
-  static const wallCracked2 = 'wall/wall_cracked2.png';
-  static const floor1 = 'floor/floor_1.png';
-  static const floor2 = 'floor/floor_2.png';
-  static const floor3 = 'floor/floor_3.png';
-  static const floor4 = 'floor/floor_4.png';
-  static const floor5 = 'floor/floor_5.png';
-  static const floor6 = 'floor/floor_6.png';
-  static const floor7 = 'floor/floor_7.png';
-  static const destinationFloor = 'floor/floor_8.png';
+  List<Node> walls = [];
 
-  static List<Box> boxes = [];
+  final wall = 'wall/wall.png';
+  final wallMossy = 'wall/wall_mossy.png';
+  final wallCracked1 = 'wall/wall_cracked1.png';
+  final wallCracked2 = 'wall/wall_cracked2.png';
+  final floor1 = 'floor/floor_1.png';
+  final floor2 = 'floor/floor_2.png';
+  final floor3 = 'floor/floor_3.png';
+  final floor4 = 'floor/floor_4.png';
+  final floor5 = 'floor/floor_5.png';
+  final floor6 = 'floor/floor_6.png';
+  final floor7 = 'floor/floor_7.png';
+  final destinationFloor = 'floor/floor_8.png';
 
-  static MapWorld map() => MapWorld([
-        ..._getFloors(Level.current),
-        ..._getWalls(Level.current),
-        ..._getDestinations(Level.current)
+  List<Box> boxes = [];
+
+  MapWorld get map => MapWorld([
+        ..._getFloors(),
+        ..._getWalls(),
+        ..._getDestinations(),
       ]);
 
-  static void solve(BonfireGameInterface gameRef) {
-    final level = Level.current;
+  void solve(BonfireGameInterface gameRef) {
     if (boxes.any((b) => !b.data.placed)) {
       final unsolvedBoxes = boxes.where((b) => !b.data.placed);
       final destinations = level.destinations.where((d) => !d.placed);
@@ -44,13 +49,20 @@ class GameMap {
         for (final destination in destinations) {
           box.messageShown = false;
           box.moveToPositionAlongThePath(
-            getRelativeTilePosition(destination.x, destination.y),
+            GameMap.getRelativeTilePosition(
+              tileSize,
+              destination.x,
+              destination.y,
+            ),
           );
 
           if (!box.isMovingAlongThePath) {
-            if (destination != destinations.last)
+            if (destination != destinations.last) {
               continue;
-            else if (box != unsolvedBoxes.last) continue outer;
+            } else if (box != unsolvedBoxes.last) {
+              continue outer;
+            }
+
             TalkDialog.show(
               gameRef.context,
               [
@@ -81,7 +93,7 @@ class GameMap {
     }
   }
 
-  static List<TileModel> _getFloors(Level level) {
+  List<TileModel> _getFloors() {
     final tileList = <TileModel>[];
 
     for (var i = 0; i < level.nodes.length; i++) {
@@ -103,7 +115,7 @@ class GameMap {
     return tileList;
   }
 
-  static List<TileModel> _getWalls(Level level) {
+  List<TileModel> _getWalls() {
     final tileList = <TileModel>[];
 
     for (var x = 0; x < level.nodes.length; x++) {
@@ -129,7 +141,7 @@ class GameMap {
     return tileList;
   }
 
-  static List<TileModel> _getDestinations(Level level) {
+  List<TileModel> _getDestinations() {
     final tileList = <TileModel>[];
 
     for (final destination in level.destinations) {
@@ -147,10 +159,7 @@ class GameMap {
     return tileList;
   }
 
-  static void getBoxes() =>
-      boxes = [for (final data in Level.current.boxes) Box(data)];
-
-  static String randomFloor() {
+  String randomFloor() {
     switch (Random().nextInt(11)) {
       case 1:
         return floor2;
@@ -173,7 +182,7 @@ class GameMap {
     }
   }
 
-  static String randomWall() {
+  String randomWall() {
     switch (Random().nextInt(21)) {
       case 1:
         return wallMossy;
@@ -186,6 +195,6 @@ class GameMap {
     }
   }
 
-  static Vector2 getRelativeTilePosition(int x, int y) =>
+  static Vector2 getRelativeTilePosition(double tileSize, int x, int y) =>
       Vector2(x * tileSize, y * tileSize);
 }

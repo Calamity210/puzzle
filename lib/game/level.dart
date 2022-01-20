@@ -18,8 +18,6 @@ class Level {
     placeObjects(boxesCount);
   }
 
-  static late Level current;
-
   final int size;
   final int boxesCount;
 
@@ -44,26 +42,31 @@ class Level {
       (j) => Node(i, j),
     ),
   );
+  List activeSpots = [];
 
-  static void newLevel(int size, int boxesCount) {
-    Level.current = Level(size: size, boxesCount: boxesCount);
-    Level.current.rip(Random().nextInt(7) - 2);
-    generatePaths(Level.current);
+  static Level newLevel(double tileSize, int size, int boxesCount) {
+    final level = Level(size: size, boxesCount: boxesCount);
+    level.rip(Random().nextInt(7) - 2);
+    generatePaths(level);
 
-    if (Level.current.unsolvable) {
-      newLevel(size, boxesCount);
-    } else {
-      GameMap.activeSpots = [];
-      if (boxesCount < 6) {
-        optimizeLevel(Level.current, Random().nextInt(2000) - 1000);
-      }
-      Level.current.player = Dash(
-        GameMap.getRelativeTilePosition(
-          Level.current.playerStartX,
-          Level.current.playerStartY,
-        ),
-      );
+    if (level.unsolvable) {
+      return newLevel(tileSize, size, boxesCount);
     }
+
+    level.activeSpots = [];
+    if (boxesCount < 6) {
+      optimizeLevel(level, Random().nextInt(2000) - 1000);
+    }
+
+    return level
+      ..player = Dash(
+        GameMap.getRelativeTilePosition(
+          tileSize,
+          level.playerStartX,
+          level.playerStartY,
+        ),
+        tileSize,
+      );
   }
 
   void defineAllowedSpots() {

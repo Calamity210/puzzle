@@ -36,5 +36,6 @@ extension ListExtension<T> on List<T> {
 }
 
 extension NodeExtensions on Node {
-  Vector2 get vector2 => GameMap.getRelativeTilePosition(x, y);
+  Vector2 vector2(double tileSize) =>
+      GameMap.getRelativeTilePosition(tileSize, x, y);
 }

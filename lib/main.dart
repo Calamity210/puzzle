@@ -1,10 +1,8 @@
-import 'dart:io';
 
 import 'package:bonfire/bonfire.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:puzzle/game/level.dart';
-import 'package:puzzle/map/map.dart';
+import 'package:puzzle/game/game_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,56 +11,39 @@ Future<void> main() async {
     await Flame.device.fullScreen();
   }
 
-  if (kIsWeb || !Platform.isAndroid && !Platform.isIOS) {
-    GameMap.tileSize = 100;
-  }
-
-  Level.newLevel(10, 3);
-
-  runApp(const MaterialApp(home: GamePage()));
+  runApp(const MaterialApp(home: HomePage()));
 }
 
-class GamePage extends StatefulWidget {
-  const GamePage({Key? key}) : super(key: key);
-
-  @override
-  State<GamePage> createState() => _GamePageState();
-}
-
-class _GamePageState extends State<GamePage> {
-  @override
-  void initState() {
-    super.initState();
-    Level.newLevel(10, 3);
-  }
+class HomePage extends StatelessWidget {
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    GameMap.getBoxes();
-
-    return BonfireWidget(
-      joystick: Joystick(
-        keyboardConfig: KeyboardConfig(),
-        directional: JoystickDirectional(isFixed: false),
-        actions: [
-          JoystickAction(
-            actionId: 'help',
-            sprite: Sprite.load('box_help.png'),
-            size: 80,
-            margin: const EdgeInsets.only(bottom: 50, right: 50),
-          ),
-          JoystickAction(
-            actionId: 'restart',
-            sprite: Sprite.load('restart.png'),
-            margin: const EdgeInsets.only(top: 25, left: 25),
-            align: JoystickActionAlign.TOP_LEFT,
-          ),
-        ],
+    return Container(
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage('assets/images/dash/grand_dash_pyramids.png'),
+          fit: BoxFit.fitHeight,
+        ),
       ),
-      map: GameMap.map(),
-      player: Level.current.player,
-      decorations: GameMap.boxes,
-      lightingColorGame: Colors.black.withOpacity(0.75),
+      child: Center(
+        child: TextButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const GamePage()),
+            );
+          },
+          child: const Text(
+            'Start',
+            style: TextStyle(
+              fontSize: 40,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
