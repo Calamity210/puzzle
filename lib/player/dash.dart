@@ -35,7 +35,6 @@ class Dash extends SimplePlayer with Lighting, ObjectCollision {
   @override
   void joystickAction(JoystickActionEvent event) {
     if (event.id == 1 && event.event == ActionEvent.UP) {
-      print(Level.currentLevel.player == this);
       GameMap.solve();
     }
     super.joystickAction(event);

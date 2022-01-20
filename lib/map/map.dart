@@ -4,7 +4,6 @@ import 'package:bonfire/bonfire.dart';
 import 'package:puzzle/game/level.dart';
 import 'package:puzzle/items/box.dart';
 import 'package:puzzle/pathfinder/node.dart';
-import 'package:puzzle/utils/generator.dart';
 
 class GameMap {
   static double tileSize = 50;
@@ -34,25 +33,14 @@ class GameMap {
       ]);
 
   static void solve() {
-    final level = Level.currentLevel;
-    final ghostBoxes = copyBoxes(level, false);
-
-    final boxPaths = calculateBoxPaths(level, ghostBoxes);
-
-    final playerPaths = calculatePlayerPaths(level, ghostBoxes, boxPaths);
-    final bestPath = playerPaths.bestPath;
-    final playerPath = playerPaths.paths[bestPath].path;
-
-    for (final path in playerPath) {
-      level.player.moveToPositionAlongThePath(
-        getRelativeTilePosition(path.x, path.y),
-      );
-    }
-
-    for (final box in boxes)
+    if (boxes.any((b) => !b.data.placed)) {
+      final box = boxes.firstWhere((b) => !b.data.placed);
       box.moveToPositionAlongThePath(
         getRelativeTilePosition(box.data.destination.x, box.data.destination.y),
       );
+      box.data.placed = true;
+      box.setupLighting(null);
+    }
   }
 
   static List<TileModel> _getFloors(Level level) {
