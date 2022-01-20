@@ -54,8 +54,7 @@ class _GamePageState extends State<GamePage> {
           JoystickAction(
             actionId: 'restart',
             sprite: Sprite.load('restart.png'),
-            size: 80,
-            margin: const EdgeInsets.only(top: 50, left: 50),
+            margin: const EdgeInsets.only(top: 25, left: 25),
             align: JoystickActionAlign.TOP_LEFT,
           ),
         ],

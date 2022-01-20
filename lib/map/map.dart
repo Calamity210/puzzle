@@ -37,35 +37,46 @@ class GameMap {
   static void solve(BonfireGameInterface gameRef) {
     final level = Level.current;
     if (boxes.any((b) => !b.data.placed)) {
-      final box = boxes.firstWhere((b) => !b.data.placed);
-      final destination = level.destinations.firstWhere((d) => !d.placed);
-      final curPos = box.position;
+      final unsolvedBoxes = boxes.where((b) => !b.data.placed);
+      final destinations = level.destinations.where((d) => !d.placed);
+      outer:
+      for (final box in unsolvedBoxes) {
+        for (final destination in destinations) {
+          box.messageShown = false;
+          box.moveToPositionAlongThePath(
+            getRelativeTilePosition(destination.x, destination.y),
+          );
 
-      box.moveToPositionAlongThePath(
-        getRelativeTilePosition(destination.x, destination.y),
-      );
-
-      if (!box.isMovingAlongThePath) {
-        TalkDialog.show(
-          gameRef.context,
-          [
-            Say(
-              text: [
-                const TextSpan(
-                  text: "Hmm... I can't seem to reach the destination point",
+          if (!box.isMovingAlongThePath) {
+            if (destination != destinations.last)
+              continue;
+            else if (box != unsolvedBoxes.last) continue outer;
+            TalkDialog.show(
+              gameRef.context,
+              [
+                Say(
+                  text: [
+                    const TextSpan(
+                      text:
+                          "Hmm... the box can't seem to reach the destination point",
+                    ),
+                  ],
+                ),
+                Say(
+                  text: [
+                    const TextSpan(
+                      text: 'Can you see the box? Are we blocking the way?',
+                    ),
+                  ],
                 ),
               ],
-            ),
-            Say(
-              text: [
-                const TextSpan(
-                  text: 'Are you blocking the way?',
-                ),
-              ],
-            ),
-          ],
-          dismissible: true,
-        );
+              dismissible: true,
+            );
+          }
+
+          break;
+        }
+        break;
       }
     }
   }

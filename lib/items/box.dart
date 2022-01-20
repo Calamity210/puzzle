@@ -32,6 +32,7 @@ class Box extends GameDecoration
   }
 
   final BoxData data;
+  bool messageShown = false;
 
   @override
   set position(Vector2 position) {
@@ -47,6 +48,8 @@ class Box extends GameDecoration
       data.placedOn = null;
     }
   }
+
+
 
   void setLighting() {
     setupLighting(
@@ -94,8 +97,7 @@ class Box extends GameDecoration
   }
 
   void checkForWin() {
-    if (!Level.current.boxes.any((d) => !d.placed) &&
-        !Level.current.solved) {
+    if (!Level.current.boxes.any((d) => !d.placed) && !Level.current.solved) {
       Level.current.solved = true;
       print('WIN');
     }
@@ -103,7 +105,29 @@ class Box extends GameDecoration
 
   @override
   bool onCollision(GameComponent component, bool active) {
-    if (component is Dash) {
+    if (active && isMovingAlongThePath && !messageShown) {
+      messageShown = true;
+      TalkDialog.show(
+        gameRef.context,
+        [
+          Say(
+            text: [
+              const TextSpan(
+                text: "The box can't seem to reach the destination point",
+              ),
+            ],
+          ),
+          Say(
+            text: [
+              const TextSpan(
+                text: 'Is anything blocking the way?',
+              ),
+            ],
+          ),
+        ],
+        dismissible: true,
+      );
+    } else  if (component is Dash) {
       switch (getComponentDirectionFromMe(component)) {
         case Direction.left:
           moveRight(speed);
