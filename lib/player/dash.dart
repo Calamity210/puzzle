@@ -43,8 +43,8 @@ class Dash extends SimplePlayer with Lighting, ObjectCollision {
       case 'restart':
         if (event.event == ActionEvent.UP) {
           position = GameMap.getRelativeTilePosition(
-            Level.currentLevel.playerStartX,
-            Level.currentLevel.playerStartY,
+            Level.current.playerStartX,
+            Level.current.playerStartY,
           );
 
           for (final box in GameMap.boxes) {

@@ -29,13 +29,13 @@ class GameMap {
   static List<Box> boxes = [];
 
   static MapWorld map() => MapWorld([
-        ..._getFloors(Level.currentLevel),
-        ..._getWalls(Level.currentLevel),
-        ..._getDestinations(Level.currentLevel)
+        ..._getFloors(Level.current),
+        ..._getWalls(Level.current),
+        ..._getDestinations(Level.current)
       ]);
 
   static void solve(BonfireGameInterface gameRef) {
-    final level = Level.currentLevel;
+    final level = Level.current;
     if (boxes.any((b) => !b.data.placed)) {
       final box = boxes.firstWhere((b) => !b.data.placed);
       final destination = level.destinations.firstWhere((d) => !d.placed);
@@ -137,7 +137,7 @@ class GameMap {
   }
 
   static void getBoxes() =>
-      boxes = [for (final data in Level.currentLevel.boxes) Box(data)];
+      boxes = [for (final data in Level.current.boxes) Box(data)];
 
   static String randomFloor() {
     switch (Random().nextInt(11)) {

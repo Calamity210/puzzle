@@ -36,7 +36,7 @@ class Box extends GameDecoration
   @override
   set position(Vector2 position) {
     transform.position = position;
-    if (Level.currentLevel.destinations.any(checkIfSolved)) {
+    if (Level.current.destinations.any(checkIfSolved)) {
       setupLighting(null);
       data.placed = true;
       checkForWin();
@@ -94,9 +94,9 @@ class Box extends GameDecoration
   }
 
   void checkForWin() {
-    if (!Level.currentLevel.boxes.any((d) => !d.placed) &&
-        !Level.currentLevel.solved) {
-      Level.currentLevel.solved = true;
+    if (!Level.current.boxes.any((d) => !d.placed) &&
+        !Level.current.solved) {
+      Level.current.solved = true;
       print('WIN');
     }
   }

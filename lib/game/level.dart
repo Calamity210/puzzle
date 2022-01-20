@@ -18,7 +18,7 @@ class Level {
     placeObjects(boxesCount);
   }
 
-  static late Level currentLevel;
+  static late Level current;
 
   final int size;
   final int boxesCount;
@@ -46,21 +46,21 @@ class Level {
   );
 
   static void newLevel(int size, int boxesCount) {
-    Level.currentLevel = Level(size: size, boxesCount: boxesCount);
-    Level.currentLevel.rip(Random().nextInt(7) - 2);
-    generatePaths(Level.currentLevel);
+    Level.current = Level(size: size, boxesCount: boxesCount);
+    Level.current.rip(Random().nextInt(7) - 2);
+    generatePaths(Level.current);
 
-    if (Level.currentLevel.unsolvable) {
+    if (Level.current.unsolvable) {
       newLevel(size, boxesCount);
     } else {
       GameMap.activeSpots = [];
       if (boxesCount < 6) {
-        optimizeLevel(Level.currentLevel, Random().nextInt(2000) - 1000);
+        optimizeLevel(Level.current, Random().nextInt(2000) - 1000);
       }
-      Level.currentLevel.player = Dash(
+      Level.current.player = Dash(
         GameMap.getRelativeTilePosition(
-          Level.currentLevel.playerStartX,
-          Level.currentLevel.playerStartY,
+          Level.current.playerStartX,
+          Level.current.playerStartY,
         ),
       );
     }

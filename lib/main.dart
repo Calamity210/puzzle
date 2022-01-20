@@ -61,7 +61,7 @@ class _GamePageState extends State<GamePage> {
         ],
       ),
       map: GameMap.map(),
-      player: Level.currentLevel.player,
+      player: Level.current.player,
       decorations: GameMap.boxes,
       lightingColorGame: Colors.black.withOpacity(0.75),
     );
