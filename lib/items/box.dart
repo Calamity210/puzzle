@@ -1,13 +1,19 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:bonfire/bonfire.dart';
+import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
 import 'package:puzzle/game/level.dart';
 import 'package:puzzle/pathfinder/node.dart';
-import 'package:puzzle/player/dash.dart';
 import 'package:puzzle/utils/destination.dart';
 import 'package:puzzle/utils/extensions.dart';
 
 class Box extends GameDecoration
-    with ObjectCollision, Movement, MoveToPositionAlongThePath, Lighting {
+    with
+        ObjectCollision,
+        Movement,
+        MoveToPositionAlongThePath,
+        Lighting,
+        Pushable {
   Box(this.data, this.level, this.tileSize)
       : super.withSprite(
           sprite: Sprite.load('box.png'),
@@ -16,6 +22,7 @@ class Box extends GameDecoration
           size: Vector2.all(tileSize * 0.9),
         ) {
     speed = 128;
+    enablePushable = true;
 
     setLighting();
 
@@ -36,10 +43,14 @@ class Box extends GameDecoration
   @override
   set position(Vector2 position) {
     transform.position = position;
+
     if (level.destinations.any(checkIfSolved)) {
-      setupLighting(null);
-      data.placed = true;
-      checkForWin();
+      if (!data.placed) {
+        FlameAudio.audioCache.play('sfx/click.mp3');
+        setupLighting(null);
+        data.placed = true;
+        checkForWin();
+      }
     } else {
       setLighting();
       data.placed = false;
@@ -121,25 +132,6 @@ class Box extends GameDecoration
         ],
         dismissible: true,
       );
-    } else if (component is Dash) {
-      switch (getComponentDirectionFromMe(component)) {
-        case Direction.left:
-          moveRight(speed);
-          break;
-        case Direction.right:
-          moveLeft(speed);
-          break;
-        case Direction.up:
-          moveDown(speed);
-          break;
-        case Direction.down:
-          moveUp(speed);
-          break;
-        default:
-          break;
-      }
-
-      return true;
     }
 
     return super.onCollision(component, active);
