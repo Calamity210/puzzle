@@ -17,10 +17,10 @@ class Box extends GameDecoration
         Pushable {
   Box(this.data, this.level, this.tileSize)
       : super(
-          position:
-              data.position.vector2(tileSize) + Vector2.all(tileSize * 0.05),
-          size: Vector2.all(tileSize * 0.9),
-        ) {
+    position:
+    data.position.vector2(tileSize) + Vector2.all(tileSize * 0.05),
+    size: Vector2.all(tileSize * 0.9),
+  ) {
     speed = 128;
     enablePushable = true;
 
@@ -68,9 +68,10 @@ class Box extends GameDecoration
     transform.position = position;
 
     if (level.destinations.any(checkIfSolved)) {
-      _boxAnimation.play(BoxAnimationEnum.transition);
       if (!data.placed) {
+        _boxAnimation.play(BoxAnimationEnum.transition);
         FlameAudio.audioCache.play('sfx/click.mp3');
+        setLighting(0.4);
         data.placed = true;
         checkForWin();
       }
@@ -85,7 +86,7 @@ class Box extends GameDecoration
     }
   }
 
-  void setLighting() {
+  void setLighting([double opacity = 0.2]) {
     setupLighting(
       LightingConfig(
         radius: width,
@@ -94,7 +95,7 @@ class Box extends GameDecoration
         pulseVariation: 0.2,
         pulseSpeed: 0.5,
         pulseCurve: Curves.linear,
-        color: const Color(0xFFC9F6F8).withOpacity(0.2),
+        color: const Color(0xFFC9F6F8).withOpacity(opacity),
       ),
     );
   }
