@@ -23,13 +23,13 @@ class GameMap {
   final wallMossy = 'wall/wall_mossy.png';
   final wallCracked1 = 'wall/wall_cracked1.png';
   final wallCracked2 = 'wall/wall_cracked2.png';
-  final floor1 = 'floor/floor_1.png';
-  final floor2 = 'floor/floor_2.png';
-  final floor3 = 'floor/floor_3.png';
-  final floor4 = 'floor/floor_4.png';
-  final floor5 = 'floor/floor_5.png';
-  final floor6 = 'floor/floor_6.png';
-  final floor7 = 'floor/floor_7.png';
+  final floor0 = 'floor/floor0.png';
+  final floor1 = 'floor/floor1.png';
+  final floor2 = 'floor/floor2.png';
+  final floor3 = 'floor/floor3.png';
+  final floor4 = 'floor/floor4.png';
+  final floor5 = 'floor/floor5.png';
+  final floor6 = 'floor/floor6.png';
   final destinationFloor = 'floor/destination.png';
 
   List<Box> boxes = [];
@@ -153,25 +153,23 @@ class GameMap {
   }
 
   String randomFloor() {
-    switch (Random().nextInt(11)) {
+    switch (Random().nextInt(12)) {
+      case 0:
+        return floor1;
       case 1:
-        return floor2;
       case 2:
+        return floor2;
       case 3:
         return floor3;
       case 4:
-      case 5:
         return floor4;
+      case 5:
       case 6:
         return floor5;
       case 7:
-      case 8:
         return floor6;
-      case 9:
-        return floor7;
-
       default:
-        return floor1;
+        return floor0;
     }
   }
 
