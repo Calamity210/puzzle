@@ -30,7 +30,7 @@ class GameMap {
   final floor5 = 'floor/floor_5.png';
   final floor6 = 'floor/floor_6.png';
   final floor7 = 'floor/floor_7.png';
-  final destinationFloor = 'floor/floor_8.png';
+  final destinationFloor = 'floor/destination.png';
 
   List<Box> boxes = [];
 
@@ -80,8 +80,8 @@ class GameMap {
             ],
             dismissible: true,
           );
-          break;
         }
+        break;
       }
     }
   }

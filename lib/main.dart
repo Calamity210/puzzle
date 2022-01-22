@@ -22,12 +22,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage('assets/images/dash/grand_dash_pyramids.png'),
-          fit: BoxFit.fitHeight,
-        ),
-      ),
+      color: Colors.white,
       child: Center(
         child: TextButton(
           onPressed: () {
@@ -41,7 +36,7 @@ class HomePage extends StatelessWidget {
             style: TextStyle(
               fontSize: 40,
               fontWeight: FontWeight.bold,
-              color: Colors.white,
+              color: Colors.blue,
             ),
           ),
         ),

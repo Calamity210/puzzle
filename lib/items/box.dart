@@ -1,8 +1,9 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:bonfire/bonfire.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
 import 'package:puzzle/game/level.dart';
+import 'package:puzzle/items/box_animation.dart';
+import 'package:puzzle/items/box_sprite_sheet.dart';
 import 'package:puzzle/pathfinder/node.dart';
 import 'package:puzzle/utils/destination.dart';
 import 'package:puzzle/utils/extensions.dart';
@@ -15,8 +16,7 @@ class Box extends GameDecoration
         Lighting,
         Pushable {
   Box(this.data, this.level, this.tileSize)
-      : super.withSprite(
-          sprite: Sprite.load('box.png'),
+      : super(
           position:
               data.position.vector2(tileSize) + Vector2.all(tileSize * 0.05),
           size: Vector2.all(tileSize * 0.9),
@@ -35,23 +35,49 @@ class Box extends GameDecoration
     );
   }
 
+  late final BoxAnimation _boxAnimation = BoxSpriteSheet.boxAnimation;
   final Level level;
   final double tileSize;
   final BoxData data;
   bool messageShown = false;
 
   @override
+  void render(Canvas c) {
+    super.render(c);
+    _boxAnimation.render(c);
+  }
+
+  @override
+  void update(double dt) {
+    if (isVisible) {
+      _boxAnimation.opacity = opacity;
+      _boxAnimation.update(dt, position, size);
+    }
+    super.update(dt);
+  }
+
+  @override
+  Future<void> onLoad() async {
+    await super.onLoad();
+    await _boxAnimation.onLoad();
+    _boxAnimation.play(BoxAnimationEnum.inactive);
+  }
+
+  @override
   set position(Vector2 position) {
     transform.position = position;
 
     if (level.destinations.any(checkIfSolved)) {
+      _boxAnimation.play(BoxAnimationEnum.transition);
       if (!data.placed) {
         FlameAudio.audioCache.play('sfx/click.mp3');
-        setupLighting(null);
         data.placed = true;
         checkForWin();
       }
     } else {
+      if (data.placed) {
+        _boxAnimation.play(BoxAnimationEnum.transition, true);
+      }
       setLighting();
       data.placed = false;
       data.placedOn?.placed = false;
@@ -68,7 +94,7 @@ class Box extends GameDecoration
         pulseVariation: 0.2,
         pulseSpeed: 0.5,
         pulseCurve: Curves.linear,
-        color: Colors.orange.withOpacity(0.2),
+        color: const Color(0xFFC9F6F8).withOpacity(0.2),
       ),
     );
   }
