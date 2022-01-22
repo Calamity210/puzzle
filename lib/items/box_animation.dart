@@ -58,6 +58,7 @@ class BoxAnimation {
       case BoxAnimationEnum.transition:
         if (transition != null) {
           _current = reverse ? transition!.reversed() : transition;
+          transition?.reset();
         }
         break;
     }
