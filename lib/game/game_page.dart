@@ -59,7 +59,7 @@ class _GamePageState extends State<GamePage> {
             map: game.map.map,
             player: game.level.player,
             decorations: game.map.boxes,
-            lightingColorGame: Colors.black.withOpacity(0.75),
+            background: BackgroundColorGame(const Color(0xFF5c5e91)),
           );
         },
       ),

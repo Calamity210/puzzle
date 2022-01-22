@@ -20,6 +20,10 @@ class GameMap {
   List<Node> walls = [];
 
   final wall = 'wall/wall.png';
+  final wall0 = 'wall/wall0.png';
+  final wall1 = 'wall/wall1.png';
+  final wall2 = 'wall/wall2.png';
+  final wall3 = 'wall/wall3.png';
   final wallMossy = 'wall/wall_mossy.png';
   final wallCracked1 = 'wall/wall_cracked1.png';
   final wallCracked2 = 'wall/wall_cracked2.png';
@@ -117,7 +121,7 @@ class GameMap {
           walls.add(level.nodes[x][y]);
           tileList.add(
             TileModel(
-              sprite: TileModelSprite(path: randomWall()),
+              sprite: TileModelSprite(path: randomWall(x, y)),
               x: x.toDouble(),
               y: y.toDouble(),
               collisions: [
@@ -173,17 +177,58 @@ class GameMap {
     }
   }
 
-  String randomWall() {
-    switch (Random().nextInt(21)) {
-      case 1:
-        return wallMossy;
-      case 2:
-        return wallCracked1;
-      case 3:
-        return wallCracked2;
-      default:
+  bool isWall(int x, int y) =>
+      level.nodes[x][y].wall && !level.surrounded(x, y);
+
+  String randomWall(int x, int y) {
+    if (x > 0 &&
+        x < level.nodes.length - 1 &&
+        y > 0 &&
+        y < level.nodes.first.length - 1) {
+      final behindWall = isWall(x - 1, y);
+      final frontWall = isWall(x + 1, y);
+      final aboveWall = isWall(x, y - 1);
+      final belowWall = isWall(x, y + 1);
+
+      if ((aboveWall || belowWall) && (behindWall || frontWall)) {
         return wall;
+      }
+
+      if (!aboveWall && !belowWall) {
+        if (y < level.nodes.first.length / 2) {
+          return wall0;
+        }
+        return wall2;
+      }
+
+      if (!behindWall) {
+        if (x < level.nodes.length / 2) {
+          return wall1;
+        }
+        return wall3;
+      }
+
+      if (!frontWall) {
+        if (x > level.nodes.length / 2) {
+          return wall3;
+        }
+        return wall1;
+      }
+    } else if (x == 0) {
+      if (!isWall(x + 1, y))
+      return wall1;
+    } else if (x == level.nodes.first.length - 1) {
+      if (!isWall(x - 1, y))
+      return wall3;
+    } else if (y == 0) {
+      if (!isWall(x, y + 1))
+      return wall0;
+    } else if (y == level.nodes.length - 1) {
+      if (!isWall(x, y - 1))
+      return wall2;
     }
+
+    return wall;
   }
 
   static Vector2 getRelativeTilePosition(double tileSize, int x, int y) =>
