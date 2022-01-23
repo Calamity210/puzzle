@@ -24,6 +24,10 @@ class GameMap {
   final wall1 = 'wall/wall1.png';
   final wall2 = 'wall/wall2.png';
   final wall3 = 'wall/wall3.png';
+  final wall4 = 'wall/wall4.png';
+  final wall5 = 'wall/wall5.png';
+  final wall6 = 'wall/wall6.png';
+  final wall7 = 'wall/wall7.png';
   final wallMossy = 'wall/wall_mossy.png';
   final wallCracked1 = 'wall/wall_cracked1.png';
   final wallCracked2 = 'wall/wall_cracked2.png';
@@ -118,10 +122,20 @@ class GameMap {
     for (var x = 0; x < level.nodes.length; x++) {
       for (var y = 0; y < level.nodes.first.length; y++) {
         if (level.nodes[x][y].wall && !level.surrounded(x, y)) {
+          var wall = getWall(x, y);
+          if (Random().nextInt(10) == 0 && wall != this.wall) {
+            final numberIndex = wall.indexOf('.') - 1;
+            final number = wall[numberIndex];
+            wall = wall.replaceRange(
+              numberIndex,
+              wall.length,
+              '_cracked$number.png',
+            );
+          }
           walls.add(level.nodes[x][y]);
           tileList.add(
             TileModel(
-              sprite: TileModelSprite(path: randomWall(x, y)),
+              sprite: TileModelSprite(path: wall),
               x: x.toDouble(),
               y: y.toDouble(),
               collisions: [
@@ -180,7 +194,7 @@ class GameMap {
   bool isWall(int x, int y) =>
       level.nodes[x][y].wall && !level.surrounded(x, y);
 
-  String randomWall(int x, int y) {
+  String getWall(int x, int y) {
     if (x > 0 &&
         x < level.nodes.length - 1 &&
         y > 0 &&
@@ -189,6 +203,26 @@ class GameMap {
       final frontWall = isWall(x + 1, y);
       final aboveWall = isWall(x, y - 1);
       final belowWall = isWall(x, y + 1);
+
+      if (belowWall) {
+        if (behindWall) {
+          return wall5;
+        }
+
+        if (frontWall) {
+          return wall6;
+        }
+      }
+
+      if (aboveWall) {
+        if (behindWall) {
+          return wall4;
+        }
+
+        if (frontWall) {
+          return wall7;
+        }
+      }
 
       if ((aboveWall || belowWall) && (behindWall || frontWall)) {
         return wall;
@@ -215,17 +249,21 @@ class GameMap {
         return wall1;
       }
     } else if (x == 0) {
-      if (!isWall(x + 1, y))
-      return wall1;
+      if (!isWall(x + 1, y)) {
+        return wall1;
+      }
     } else if (x == level.nodes.first.length - 1) {
-      if (!isWall(x - 1, y))
-      return wall3;
+      if (!isWall(x - 1, y)) {
+        return wall3;
+      }
     } else if (y == 0) {
-      if (!isWall(x, y + 1))
-      return wall0;
+      if (!isWall(x, y + 1)) {
+        return wall0;
+      }
     } else if (y == level.nodes.length - 1) {
-      if (!isWall(x, y - 1))
-      return wall2;
+      if (!isWall(x, y - 1)) {
+        return wall2;
+      }
     }
 
     return wall;
