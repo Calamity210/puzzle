@@ -2,7 +2,6 @@ import 'dart:math';
 import 'dart:ui' as ui;
 
 import 'package:bonfire/bonfire.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
 
@@ -30,14 +29,14 @@ class ParticleCircle {
   late final double repulsion = rand.nextDouble() * 4 + 1;
   late final double originRepulsion = rand.nextDouble() * 0.01 + 0.01;
   late double mouseRepulsion = 1;
-  late double gravity = 0.6;
+  late double gravity = 0.1;
   late double radius = originRadius;
 
   void updateState(double mouseX, double mouseY) {
     _updateStateByMouse(mouseX, mouseY);
     _updateStateByOrigin();
-    velocity.add(Vector2(-0.01, 0.01));
-    velocity *= 0.95;
+    velocity.add(Vector2(0, -0));
+    velocity.scale(0.95);
     position.add(velocity);
   }
 
@@ -45,14 +44,14 @@ class ParticleCircle {
     final dx = mouseX - position.x;
     final dy = mouseY - position.y;
     final distance = sqrt(dx * dx + dy * dy);
-    final pointCos = dx/distance;
-    final pointSin = dy/distance;
+    final pointCos = dx / distance;
+    final pointSin = dy / distance;
 
     if (distance < repulsionChangeDistance) {
       gravity *= 0.6;
       mouseRepulsion = max(0, mouseRepulsion * 0.5 - 0.01);
       velocity.sub(Vector2(pointCos * repulsion, pointSin * repulsion));
-      velocity *= 1 - mouseRepulsion;
+      velocity.scale(1 - mouseRepulsion);
     } else {
       gravity += (originRepulsion - gravity) * 0.1;
       mouseRepulsion = min(1, mouseRepulsion + 0.03);
@@ -60,9 +59,9 @@ class ParticleCircle {
   }
 
   void _updateStateByOrigin() {
-    final dx = position.x - origin.x;
-    final dy = position.y - origin.y;
-    final distance = position.distanceTo(origin);
+    final dx = origin.x - position.x;
+    final dy = origin.y - position.y;
+    final distance = origin.distanceTo(position);
 
     velocity.add(Vector2(dx * gravity, dy * gravity));
     radius = originRadius + distance / 16;
@@ -148,21 +147,14 @@ class ImageParticles {
 }
 
 class ImageParticlesPainter extends CustomPainter {
-  ImageParticlesPainter(
-    this.imagePainter,
-    this.time,
-    this.mouseX,
-    this.mouseY,
-  ) : super(repaint: time);
+  ImageParticlesPainter(this.imagePainter, this.mouseX, this.mouseY);
 
   final ImageParticles imagePainter;
-  final ValueListenable<double> time;
   final double mouseX;
   final double mouseY;
 
   @override
   void paint(ui.Canvas canvas, ui.Size size) {
-    repulsionChangeDistance = max(0, repulsionChangeDistance - 1.5);
     imagePainter.updateState(mouseX, mouseY);
     imagePainter.draw(canvas);
   }
