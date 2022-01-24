@@ -2,11 +2,11 @@ import 'dart:math';
 import 'dart:ui' as ui;
 
 import 'package:bonfire/bonfire.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
-import 'package:puzzle/game/game_page.dart';
 
-const fractionSize = 50;
+const fractionSize = 75;
 const originCircleRadius = 12;
 const padding = 70;
 
@@ -23,18 +23,40 @@ class ParticleCircle {
 
   final rand = Random();
   late final Vector2 origin = position;
-  late final Vector2 velocity = Vector2(
+  late Vector2 velocity = Vector2(
     rand.nextDouble() * 50,
     rand.nextDouble() * 50,
   );
   late final double repulsion = rand.nextDouble() * 4 + 1;
   late final double originRepulsion = rand.nextDouble() * 0.01 + 0.01;
-  late final double mouseRepulsion = 1;
+  late double mouseRepulsion = 1;
   late double gravity = 0.6;
   late double radius = originRadius;
 
-  void updateState() {
+  void updateState(double mouseX, double mouseY) {
+    _updateStateByMouse(mouseX, mouseY);
     _updateStateByOrigin();
+    velocity.add(Vector2(-0.01, 0.01));
+    velocity *= 0.95;
+    position.add(velocity);
+  }
+
+  void _updateStateByMouse(double mouseX, double mouseY) {
+    final dx = mouseX - position.x;
+    final dy = mouseY - position.y;
+    final distance = sqrt(dx * dx + dy * dy);
+    final pointCos = dx/distance;
+    final pointSin = dy/distance;
+
+    if (distance < repulsionChangeDistance) {
+      gravity *= 0.6;
+      mouseRepulsion = max(0, mouseRepulsion * 0.5 - 0.01);
+      velocity.sub(Vector2(pointCos * repulsion, pointSin * repulsion));
+      velocity *= 1 - mouseRepulsion;
+    } else {
+      gravity += (originRepulsion - gravity) * 0.1;
+      mouseRepulsion = min(1, mouseRepulsion + 0.03);
+    }
   }
 
   void _updateStateByOrigin() {
@@ -96,9 +118,9 @@ class ImageParticles {
     }
   }
 
-  void updateState() {
+  void updateState(double mouseX, double mouseY) {
     for (final point in points) {
-      point.updateState();
+      point.updateState(mouseX, mouseY);
     }
   }
 
@@ -123,4 +145,28 @@ class ImageParticles {
       pixels[idx + 2],
     );
   }
+}
+
+class ImageParticlesPainter extends CustomPainter {
+  ImageParticlesPainter(
+    this.imagePainter,
+    this.time,
+    this.mouseX,
+    this.mouseY,
+  ) : super(repaint: time);
+
+  final ImageParticles imagePainter;
+  final ValueListenable<double> time;
+  final double mouseX;
+  final double mouseY;
+
+  @override
+  void paint(ui.Canvas canvas, ui.Size size) {
+    repulsionChangeDistance = max(0, repulsionChangeDistance - 1.5);
+    imagePainter.updateState(mouseX, mouseY);
+    imagePainter.draw(canvas);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }

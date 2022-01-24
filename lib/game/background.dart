@@ -14,7 +14,9 @@ class Background extends GameBackground {
   final Color color;
   final img.Image image;
 
-  ImageParticles? ip;
+  late ImageParticles ip = ImageParticles(image);
+
+  bool rendered = false;
 
   @override
   void render(Canvas canvas) {
@@ -24,9 +26,6 @@ class Background extends GameBackground {
       BlendMode.src,
     );
 
-    repulsionChangeDistance = max(0, repulsionChangeDistance - 1.5);
-    ip ??= ImageParticles(image);
-    ip?.updateState();
-    ip?.draw(canvas);
+    ip.draw(canvas);
   }
 }

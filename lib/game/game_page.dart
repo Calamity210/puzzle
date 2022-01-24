@@ -68,7 +68,7 @@ class _GamePageState extends State<GamePage> {
                   player: game.level.player,
                   decorations: game.map.boxes,
                   background: Background(
-                    color: const Color(0xFF5c5e91),
+                    color: const Color(0xFF122164),
                     image: img.decodeImage(
                       snapshot.data!.buffer.asUint8List().buffer.asUint8List(),
                     )!,
