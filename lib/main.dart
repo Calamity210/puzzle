@@ -48,7 +48,7 @@ class _HomePageState extends State<HomePage>
   @override
   void initState() {
     super.initState();
-    _timer = async.Timer.periodic(const Duration(milliseconds: 17), (timer) {
+    _timer = async.Timer.periodic(const Duration(milliseconds: 34), (timer) {
       setState(() {
         repulsionChangeDistance = max(0, repulsionChangeDistance - 1.5);
       });
@@ -82,8 +82,8 @@ class _HomePageState extends State<HomePage>
             painter: ImageParticlesPainter(ip, _mouseX, _mouseY),
             child: Center(
               child: TextButton(
-                onPressed: () {
-                  Navigator.push(
+                onPressed: () async {
+                  await Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => const GamePage(),

@@ -39,3 +39,15 @@ extension NodeExtensions on Node {
   Vector2 vector2(double tileSize) =>
       GameMap.getRelativeTilePosition(tileSize, x, y);
 }
+
+extension Vector2Extensions on Vector2 {
+  void addNum(double x, double y) {
+    this.x += x;
+    this.y += y;
+  }
+
+  void subNum(double x, double y) {
+    this.x -= x;
+    this.y -= y;
+  }
+}
