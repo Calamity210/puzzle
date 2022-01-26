@@ -71,11 +71,11 @@ class _HomePageState extends State<HomePage>
         color: Colors.black,
         height: image.height + padding * 2,
         width: image.width + padding * 2,
-        child: MouseRegion(
-          onHover: (event) {
+        child: GestureDetector(
+          onPanUpdate: (details) {
             repulsionChangeDistance = 150;
-            _mouseX = event.position.dx;
-            _mouseY = event.position.dy;
+            _mouseX = details.globalPosition.dx;
+            _mouseY = details.globalPosition.dy;
           },
           child: CustomPaint(
             willChange: true,
