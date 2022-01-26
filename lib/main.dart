@@ -39,12 +39,11 @@ class _HomePageState extends State<HomePage>
   var _mouseX = 0.0;
   var _mouseY = 0.0;
 
-  ImageParticles ip = ImageParticles(
-    img.decodeImage(imageBytes.buffer
-        .asUint8List()
-        .buffer
-        .asUint8List())!,
-  );
+  late final image = img.decodeImage(
+    imageBytes.buffer.asUint8List().buffer.asUint8List(),
+  )!;
+
+  late ImageParticles ip = ImageParticles(image);
 
   @override
   void initState() {
@@ -68,31 +67,36 @@ class _HomePageState extends State<HomePage>
   Widget build(BuildContext context) {
     return Container(
       color: Colors.white,
-      child: MouseRegion(
-        onHover: (event) {
-          repulsionChangeDistance = 150;
-          _mouseX = event.position.dx;
-          _mouseY = event.position.dy;
-        },
-        child: CustomPaint(
-          willChange: true,
-          painter: ImageParticlesPainter(ip, _mouseX, _mouseY),
-          child: Center(
-            child: TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const GamePage(),
+      child: Container(
+        color: Colors.black,
+        height: image.height + padding * 2,
+        width: image.width + padding * 2,
+        child: MouseRegion(
+          onHover: (event) {
+            repulsionChangeDistance = 150;
+            _mouseX = event.position.dx;
+            _mouseY = event.position.dy;
+          },
+          child: CustomPaint(
+            willChange: true,
+            painter: ImageParticlesPainter(ip, _mouseX, _mouseY),
+            child: Center(
+              child: TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const GamePage(),
+                    ),
+                  );
+                },
+                child: const Text(
+                  'Start',
+                  style: TextStyle(
+                    fontSize: 40,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue,
                   ),
-                );
-              },
-              child: const Text(
-                'Start',
-                style: TextStyle(
-                  fontSize: 40,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.blue,
                 ),
               ),
             ),

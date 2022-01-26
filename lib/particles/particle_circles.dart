@@ -5,26 +5,24 @@ import 'package:bonfire/bonfire.dart';
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
 
-const fractionSize = 75;
+const fractionSize = 80;
 const originCircleRadius = 12;
 const padding = 70;
 
 double repulsionChangeDistance = 100;
-ImageParticles? pointSystem;
-Image? targetImage;
 
 class ParticleCircle {
-  ParticleCircle(this.position, this.originRadius, this.color);
+  ParticleCircle(this.origin, this.originRadius, this.color);
 
-  final Vector2 position;
+  final Vector2 origin;
   final double originRadius;
   final ui.Color color;
 
   final rand = Random();
-  late final Vector2 origin = position;
+  late final Vector2 position = origin.clone();
   late Vector2 velocity = Vector2(
-    rand.nextDouble() * 50,
-    rand.nextDouble() * 50,
+    rand.nextInt(50).toDouble(),
+    rand.nextInt(50).toDouble(),
   );
   late final double repulsion = rand.nextDouble() * 4 + 1;
   late final double originRepulsion = rand.nextDouble() * 0.01 + 0.01;
@@ -35,7 +33,7 @@ class ParticleCircle {
   void updateState(double mouseX, double mouseY) {
     _updateStateByMouse(mouseX, mouseY);
     _updateStateByOrigin();
-    velocity.add(Vector2(0, -0));
+    // velocity.add(Vector2(0, -0));
     velocity.scale(0.95);
     position.add(velocity);
   }
@@ -61,7 +59,7 @@ class ParticleCircle {
   void _updateStateByOrigin() {
     final dx = origin.x - position.x;
     final dy = origin.y - position.y;
-    final distance = origin.distanceTo(position);
+    final distance = sqrt(dx * dx + dy * dy);
 
     velocity.add(Vector2(dx * gravity, dy * gravity));
     radius = originRadius + distance / 16;
@@ -117,14 +115,12 @@ class ImageParticles {
     }
   }
 
-  void updateState(double mouseX, double mouseY) {
+  void draw(ui.Canvas canvas, [double? mouseX, double? mouseY]) {
     for (final point in points) {
-      point.updateState(mouseX, mouseY);
-    }
-  }
+      if (mouseX != null && mouseY != null) {
+        point.updateState(mouseX, mouseY);
+      }
 
-  void draw(ui.Canvas canvas) {
-    for (final point in points) {
       point.draw(canvas);
     }
   }
@@ -154,10 +150,8 @@ class ImageParticlesPainter extends CustomPainter {
   final double mouseY;
 
   @override
-  void paint(ui.Canvas canvas, ui.Size size) {
-    imagePainter.updateState(mouseX, mouseY);
-    imagePainter.draw(canvas);
-  }
+  void paint(ui.Canvas canvas, ui.Size size) =>
+      imagePainter.draw(canvas, mouseX, mouseY);
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
