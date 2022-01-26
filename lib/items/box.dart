@@ -5,27 +5,21 @@ import 'package:puzzle/game/level.dart';
 import 'package:puzzle/items/box_animation.dart';
 import 'package:puzzle/items/box_sprite_sheet.dart';
 import 'package:puzzle/pathfinder/node.dart';
+import 'package:puzzle/player/dash.dart';
 import 'package:puzzle/utils/destination.dart';
 import 'package:puzzle/utils/extensions.dart';
 
 class Box extends GameDecoration
-    with
-        ObjectCollision,
-        Movement,
-        MoveToPositionAlongThePath,
-        Lighting,
-        Pushable {
+    with ObjectCollision, Movement, MoveToPositionAlongThePath, Lighting {
   Box(this.data, this.level, this.tileSize)
       : super(
-    position:
-    data.position.vector2(tileSize) + Vector2.all(tileSize * 0.05),
-    size: Vector2.all(tileSize * 0.9),
-  ) {
+          position:
+              data.position.vector2(tileSize) + Vector2.all(tileSize * 0.05),
+          size: Vector2.all(tileSize * 0.9),
+        ) {
     speed = 128;
-    enablePushable = true;
 
     setLighting();
-
     setupCollision(
       CollisionConfig(
         collisions: [
@@ -159,6 +153,25 @@ class Box extends GameDecoration
         ],
         dismissible: true,
       );
+    } else if (component is Dash) {
+      switch (getComponentDirectionFromMe(component)) {
+        case Direction.left:
+          moveRight(speed);
+          break;
+        case Direction.right:
+          moveLeft(speed);
+          break;
+        case Direction.up:
+          moveDown(speed);
+          break;
+        case Direction.down:
+          moveUp(speed);
+          break;
+        default:
+          break;
+      }
+
+      return true;
     }
 
     return super.onCollision(component, active);
