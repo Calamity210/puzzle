@@ -50,7 +50,7 @@ class GameMap {
 
   void solve(BonfireGameInterface gameRef) {
     if (boxes.any((b) => !b.data.placed)) {
-      final unsolvedBoxes = boxes.where((b) => !b.data.placed);
+      final unsolvedBoxes = boxes.reversed.where((b) => !b.data.placed);
       for (final box in unsolvedBoxes) {
         final destination = box.data.destination;
         box.messageShown = false;
