@@ -22,11 +22,21 @@ Future<void> main() async {
   imageBytes = await rootBundle.load('assets/images/dash/dash.png');
   await FlameAudio.audioCache.loadAll(['sfx/click.mp3']);
 
-  runApp(const MaterialApp(home: HomePage()));
+  runApp(
+    LayoutBuilder(
+      builder: (context, c) {
+        return MaterialApp(
+          home: HomePage(imageSize: (c.maxHeight * 0.75).toInt()),
+        );
+      },
+    ),
+  );
 }
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({required this.imageSize, Key? key}) : super(key: key);
+
+  final int imageSize;
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -39,11 +49,18 @@ class _HomePageState extends State<HomePage>
   var _mouseX = 0.0;
   var _mouseY = 0.0;
 
-  late final image = img.decodeImage(
-    imageBytes.buffer.asUint8List().buffer.asUint8List(),
-  )!;
+  late final image = img.copyResize(
+    img.decodeImage(
+      imageBytes.buffer.asUint8List().buffer.asUint8List(),
+    )!,
+    height: widget.imageSize,
+    width: widget.imageSize,
+  );
 
-  late ImageParticles ip = ImageParticles(image);
+  late ImageParticles ip = ImageParticles(
+    image,
+    (widget.imageSize * 0.03).toInt(),
+  );
 
   @override
   void initState() {
@@ -66,42 +83,46 @@ class _HomePageState extends State<HomePage>
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white,
-      child: Container(
-        color: Colors.black,
-        height: image.height + padding * 2,
-        width: image.width + padding * 2,
-        child: GestureDetector(
-          onPanUpdate: (details) {
-            repulsionChangeDistance = 150;
-            _mouseX = details.globalPosition.dx;
-            _mouseY = details.globalPosition.dy;
-          },
-          child: CustomPaint(
-            willChange: true,
-            painter: ImageParticlesPainter(ip, _mouseX, _mouseY),
-            child: Center(
-              child: TextButton(
-                onPressed: () async {
-                  await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const GamePage(),
-                    ),
-                  );
-                },
-                child: const Text(
-                  'Start',
-                  style: TextStyle(
-                    fontSize: 40,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blue,
-                  ),
+      color: Colors.black,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          TextButton(
+            onPressed: () async {
+              await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const GamePage(),
                 ),
+              );
+            },
+            child: const Text(
+              'Start',
+              style: TextStyle(
+                fontSize: 40,
+                fontWeight: FontWeight.bold,
+                color: Colors.blue,
               ),
             ),
           ),
-        ),
+          CustomPaint(
+            isComplex: true,
+            willChange: true,
+            painter: ImageParticlesPainter(ip, _mouseX, _mouseY),
+            child: SizedBox(
+              height: widget.imageSize.toDouble(),
+              width: widget.imageSize.toDouble(),
+              child: GestureDetector(
+                excludeFromSemantics: true,
+                onPanUpdate: (details) {
+                  repulsionChangeDistance = 150;
+                  _mouseX = details.localPosition.dx;
+                  _mouseY = details.localPosition.dy;
+                },
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

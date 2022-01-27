@@ -7,8 +7,7 @@ import 'package:image/image.dart' as img;
 import 'package:puzzle/utils/extensions.dart';
 
 const fractionSize = 80;
-const originCircleRadius = 12;
-const padding = 70.0;
+// const originCircleRadius = 12;
 
 double repulsionChangeDistance = 100;
 
@@ -73,15 +72,15 @@ class ParticleCircle {
 }
 
 class ImageParticles {
-  ImageParticles(this.image) {
-    createParticles();
+  ImageParticles(this.image, int originCircleRadius) {
+    createParticles(originCircleRadius);
   }
 
   final img.Image image;
 
   final points = <ParticleCircle>[];
 
-  void createParticles() {
+  void createParticles(int originCircleRadius) {
     final rand = Random();
     final imageWidth = image.width.toDouble();
     final imageHeight = image.height.toDouble();
@@ -102,8 +101,6 @@ class ImageParticles {
         if (originColor.alpha == 0) {
           continue;
         }
-
-        originPosition.addNum(padding, padding);
 
         points.add(
           ParticleCircle(originPosition, originRadius.toDouble(), originColor),
