@@ -18,9 +18,15 @@ class BoxAnimation {
     BoxAnimationEnum initAnimation = BoxAnimationEnum.inactive,
   }) {
     _currentType = initAnimation;
-    _loader?.add(AssetToLoad(inactive, (value) => this.inactive = value));
-    _loader?.add(AssetToLoad(active, (value) => this.active = value));
-    _loader?.add(AssetToLoad(transition, (value) => this.transition = value));
+    _loader?.add(
+      AssetToLoad(inactive, (v) => this.inactive = v as SpriteAnimation),
+    );
+    _loader?.add(
+      AssetToLoad(active, (v) => this.active = v as SpriteAnimation),
+    );
+    _loader?.add(
+      AssetToLoad(transition, (v) => this.transition = v as SpriteAnimation),
+    );
   }
 
   SpriteAnimation? inactive;
