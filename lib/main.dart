@@ -1,5 +1,4 @@
 import 'dart:async' as async;
-import 'dart:math';
 
 import 'package:bonfire/bonfire.dart';
 import 'package:flame_audio/flame_audio.dart';
@@ -7,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image/image.dart' as img;
+import 'package:puzzle/background/background_painter.dart';
 import 'package:puzzle/game/game_page.dart';
 import 'package:puzzle/particles/particle_circles.dart';
 
@@ -108,9 +108,9 @@ class _HomePageState extends State<HomePage>
   void initState() {
     super.initState();
     _timer = async.Timer.periodic(const Duration(milliseconds: 34), (timer) {
-      setState(() {
-        repulsionChangeDistance = max(0, repulsionChangeDistance - 1.5);
-      });
+      // setState(() {
+      //   repulsionChangeDistance = max(0, repulsionChangeDistance - 1.5);
+      // });
     });
   }
 
@@ -125,46 +125,49 @@ class _HomePageState extends State<HomePage>
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.black,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          TextButton(
-            onPressed: () async {
-              await Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const GamePage(),
+      color: const Color(0xFF061547),
+      child: CustomPaint(
+        painter: BackgroundPainter(),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            TextButton(
+              onPressed: () async {
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const GamePage(),
+                  ),
+                );
+              },
+              child: const Text(
+                'Start',
+                style: TextStyle(
+                  fontSize: 40,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blue,
                 ),
-              );
-            },
-            child: const Text(
-              'Start',
-              style: TextStyle(
-                fontSize: 40,
-                fontWeight: FontWeight.bold,
-                color: Colors.blue,
               ),
             ),
-          ),
-          CustomPaint(
-            isComplex: true,
-            willChange: true,
-            painter: ImageParticlesPainter(ip, _mouseX, _mouseY),
-            child: SizedBox(
-              height: widget.imageSize.toDouble(),
-              width: widget.imageSize.toDouble(),
-              child: GestureDetector(
-                excludeFromSemantics: true,
-                onPanUpdate: (details) {
-                  repulsionChangeDistance = 150;
-                  _mouseX = details.localPosition.dx;
-                  _mouseY = details.localPosition.dy;
-                },
+            CustomPaint(
+              isComplex: true,
+              willChange: true,
+              painter: ImageParticlesPainter(ip, _mouseX, _mouseY),
+              child: SizedBox(
+                height: widget.imageSize.toDouble(),
+                width: widget.imageSize.toDouble(),
+                child: GestureDetector(
+                  excludeFromSemantics: true,
+                  onPanUpdate: (details) {
+                    repulsionChangeDistance = 150;
+                    _mouseX = details.localPosition.dx;
+                    _mouseY = details.localPosition.dy;
+                  },
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
