@@ -22,6 +22,48 @@ Future<void> main() async {
   imageBytes = await rootBundle.load('assets/images/dash/dash.png');
   await FlameAudio.audioCache.loadAll(['sfx/click.mp3']);
 
+  async.unawaited(
+    Flame.images.loadAll([
+      'dash/dash_idle.png',
+      'dash/dash_jump.png',
+      'dash/dash_run_down.png',
+      'dash/dash_run_left.png',
+      'dash/dash_run_right.png',
+      'dash/dash_run_up.png',
+      'floor/destination.png',
+      'floor/floor0.png',
+      'floor/floor1.png',
+      'floor/floor2.png',
+      'floor/floor3.png',
+      'floor/floor4.png',
+      'floor/floor5.png',
+      'floor/floor6.png',
+      'items/box.png',
+      'items/box_activated.png',
+      'items/box_animation.png',
+      'items/box_animation.png',
+      'wall/wall.png',
+      'wall/wall0.png',
+      'wall/wall1.png',
+      'wall/wall2.png',
+      'wall/wall3.png',
+      'wall/wall4.png',
+      'wall/wall5.png',
+      'wall/wall6.png',
+      'wall/wall7.png',
+      'wall/wall_cracked0.png',
+      'wall/wall_cracked1.png',
+      'wall/wall_cracked2.png',
+      'wall/wall_cracked3.png',
+      'wall/wall_cracked4.png',
+      'wall/wall_cracked5.png',
+      'wall/wall_cracked6.png',
+      'wall/wall_cracked7.png',
+      'box_help.png',
+      'restart.png',
+    ]),
+  );
+
   runApp(
     LayoutBuilder(
       builder: (context, c) {
