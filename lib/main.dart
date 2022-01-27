@@ -69,29 +69,30 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, c) {
-        print('layout');
         return Container(
           color: const Color(0xFF061547),
           child: CustomPaint(
-            painter: BackgroundPainter(),
+            painter: const BackgroundPainter(),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                TextButton(
-                  onPressed: () async {
-                    await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const GamePage(),
+                RepaintBoundary(
+                  child: TextButton(
+                    onPressed: () async {
+                      await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const GamePage(),
+                        ),
+                      );
+                    },
+                    child: const Text(
+                      'Start',
+                      style: TextStyle(
+                        fontSize: 40,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blue,
                       ),
-                    );
-                  },
-                  child: const Text(
-                    'Start',
-                    style: TextStyle(
-                      fontSize: 40,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue,
                     ),
                   ),
                 ),

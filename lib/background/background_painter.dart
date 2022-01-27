@@ -3,7 +3,9 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 class BackgroundPainter extends CustomPainter {
-  final colors = const <Color>[
+  const BackgroundPainter();
+
+  List<Color> get colors => const [
     Color(0xFF02569B),
     Color(0xFF13B9FD),
     Color(0xFF671DE5),

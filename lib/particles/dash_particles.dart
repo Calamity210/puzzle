@@ -44,7 +44,7 @@ class _DashParticlesState extends State<DashParticles> {
     final dashImageBytes = await rootBundle.load('assets/images/dash/dash.png');
     return ImageParticles(
       img.copyResize(
-        img.decodeImage(dashImageBytes.buffer.asUint8List())!,
+        img.decodePng(dashImageBytes.buffer.asUint8List())!,
         height: widget.imageSize,
         width: widget.imageSize,
       ),
@@ -54,31 +54,33 @@ class _DashParticlesState extends State<DashParticles> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<ImageParticles>(
-      future: getIP,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return CustomPaint(
-            isComplex: true,
-            willChange: true,
-            painter: ImageParticlesPainter(snapshot.data!, _mouseX, _mouseY),
-            child: SizedBox(
-              height: widget.imageSize.toDouble(),
-              width: widget.imageSize.toDouble(),
-              child: GestureDetector(
-                excludeFromSemantics: true,
-                onPanUpdate: (details) {
-                  repulsionChangeDistance = 150;
-                  _mouseX = details.localPosition.dx;
-                  _mouseY = details.localPosition.dy;
-                },
+    return RepaintBoundary(
+      child: FutureBuilder<ImageParticles>(
+        future: getIP,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return CustomPaint(
+              isComplex: true,
+              willChange: true,
+              painter: ImageParticlesPainter(snapshot.data!, _mouseX, _mouseY),
+              child: SizedBox(
+                height: widget.imageSize.toDouble(),
+                width: widget.imageSize.toDouble(),
+                child: GestureDetector(
+                  excludeFromSemantics: true,
+                  onPanUpdate: (details) {
+                    repulsionChangeDistance = 150;
+                    _mouseX = details.localPosition.dx;
+                    _mouseY = details.localPosition.dy;
+                  },
+                ),
               ),
-            ),
-          );
-        }
+            );
+          }
 
-        return const CircularProgressIndicator();
-      },
+          return const CircularProgressIndicator();
+        },
+      ),
     );
   }
 }

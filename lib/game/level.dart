@@ -18,6 +18,31 @@ class Level {
     placeObjects(boxesCount);
   }
 
+  factory Level.newLevel(double tileSize, int size, int boxesCount) {
+    final level = Level(size: size, boxesCount: boxesCount);
+    level.rip(Random().nextInt(7) - 2);
+    generatePaths(level);
+
+    if (level.unsolvable) {
+      return Level.newLevel(tileSize, size, boxesCount);
+    }
+
+    level.activeSpots = [];
+    if (boxesCount < 6) {
+      optimizeLevel(level, Random().nextInt(2000) - 1000);
+    }
+
+    return level
+      ..player = Dash(
+        GameMap.getRelativeTilePosition(
+          tileSize,
+          level.playerStartX,
+          level.playerStartY,
+        ),
+        tileSize,
+      );
+  }
+
   final int size;
   final int boxesCount;
 
@@ -43,31 +68,6 @@ class Level {
     ),
   );
   List activeSpots = [];
-
-  static Level newLevel(double tileSize, int size, int boxesCount) {
-    final level = Level(size: size, boxesCount: boxesCount);
-    level.rip(Random().nextInt(7) - 2);
-    generatePaths(level);
-
-    if (level.unsolvable) {
-      return newLevel(tileSize, size, boxesCount);
-    }
-
-    level.activeSpots = [];
-    if (boxesCount < 6) {
-      optimizeLevel(level, Random().nextInt(2000) - 1000);
-    }
-
-    return level
-      ..player = Dash(
-        GameMap.getRelativeTilePosition(
-          tileSize,
-          level.playerStartX,
-          level.playerStartY,
-        ),
-        tileSize,
-      );
-  }
 
   void defineAllowedSpots() {
     for (var i = 2; i < nodes.length - 2; i++) {
