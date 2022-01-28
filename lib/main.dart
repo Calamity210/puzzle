@@ -132,7 +132,7 @@ class _LeftBarState extends State<LeftBar> {
                 ),
               ),
               Slider(
-                label: '$_mapSize',
+                label: '${_mapSize.toInt()}',
                 value: _mapSize,
                 min: 10,
                 max: 15,
@@ -148,7 +148,7 @@ class _LeftBarState extends State<LeftBar> {
                 ),
               ),
               Slider(
-                label: '$_boxCount',
+                label: '${_boxCount.toInt()}',
                 value: _boxCount,
                 min: 3,
                 max: 6,
