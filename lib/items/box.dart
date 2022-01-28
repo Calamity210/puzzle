@@ -125,6 +125,7 @@ class Box extends GameDecoration
   void checkForWin() {
     if (!level.boxes.any((d) => !d.placed) && !level.solved) {
       level.solved = true;
+      FlameAudio.audioCache.play('sfx/win.wav');
       Navigator.of(gameRef.context).pop();
     }
   }

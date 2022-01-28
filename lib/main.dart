@@ -18,6 +18,7 @@ Future<void> main() async {
   await FlameAudio.audioCache.loadAll([
     'sfx/click.mp3',
     'sfx/restart.wav',
+    'sfx/win.wav',
   ]);
 
   async.unawaited(
