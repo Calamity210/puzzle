@@ -1,4 +1,5 @@
 import 'package:bonfire/bonfire.dart';
+import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:puzzle/game/game.dart';
@@ -45,6 +46,7 @@ class Dash extends SimplePlayer with Lighting, ObjectCollision {
         break;
       case 'restart':
         if (event.event == ActionEvent.UP) {
+          FlameAudio.audioCache.play('sfx/restart.wav');
           position = GameMap.getRelativeTilePosition(
             game.map.tileSize,
             game.level.playerStartX,

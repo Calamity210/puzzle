@@ -15,7 +15,10 @@ Future<void> main() async {
     await Flame.device.fullScreen();
   }
 
-  await FlameAudio.audioCache.loadAll(['sfx/click.mp3']);
+  await FlameAudio.audioCache.loadAll([
+    'sfx/click.mp3',
+    'sfx/restart.wav',
+  ]);
 
   async.unawaited(
     Flame.images.loadAll([
