@@ -82,7 +82,10 @@ class HomePage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 LeftBar(width: c.maxWidth / 4),
-                DashParticles(imageSize: (c.maxHeight * 0.75).toInt()),
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: DashParticles(imageSize: (c.maxHeight * 0.75).toInt()),
+                ),
               ],
             ),
           ),
@@ -109,56 +112,128 @@ class _LeftBarState extends State<LeftBar> {
   Widget build(BuildContext context) {
     return RepaintBoundary(
       child: Container(
-        color: Colors.black.withOpacity(0.4),
+        color: Colors.black.withOpacity(0.5),
         width: widget.width,
-        child: Column(
-          children: [
-            const Spacer(),
-            const Text('Map Size', style: TextStyle(color: Colors.white)),
-            Slider(
-              label: '$_mapSize',
-              value: _mapSize,
-              min: 10,
-              max: 15,
-              divisions: 5,
-              onChanged: (value) => setState(() => _mapSize = value),
-            ),
-            const Spacer(),
-            const Text('Box Count', style: TextStyle(color: Colors.white)),
-            Slider(
-              label: '$_boxCount',
-              value: _boxCount,
-              min: 3,
-              max: 6,
-              divisions: 3,
-              onChanged: (value) => setState(() => _boxCount = value),
-            ),
-            const Spacer(),
-            TextButton(
-              onPressed: () async {
-                await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => GamePage(
-                      mapSize: _mapSize.toInt(),
-                      boxCount: _boxCount.toInt(),
-                    ),
-                  ),
-                );
-              },
-              child: const Text(
-                'Start',
+        child: SliderTheme(
+          data: const SliderThemeData(
+            showValueIndicator: ShowValueIndicator.never,
+            thumbShape: _ThumbShape(),
+            valueIndicatorColor: Color(0xFF13B9FD),
+            activeTrackColor: Color(0xFF13B9FD),
+          ),
+          child: Column(
+            children: [
+              const Spacer(),
+              const Text(
+                'Map Size',
                 style: TextStyle(
-                  fontSize: 40,
+                  color: Colors.white,
                   fontWeight: FontWeight.bold,
-                  color: Colors.blue,
                 ),
               ),
-            ),
-            const Spacer(),
-          ],
+              Slider(
+                label: '$_mapSize',
+                value: _mapSize,
+                min: 10,
+                max: 15,
+                divisions: 5,
+                onChanged: (value) => setState(() => _mapSize = value),
+              ),
+              const Spacer(),
+              const Text(
+                'Box Count',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Slider(
+                label: '$_boxCount',
+                value: _boxCount,
+                min: 3,
+                max: 6,
+                divisions: 3,
+                onChanged: (value) => setState(() => _boxCount = value),
+              ),
+              const Spacer(),
+              TextButton(
+                onPressed: () async {
+                  await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => GamePage(
+                        mapSize: _mapSize.toInt(),
+                        boxCount: _boxCount.toInt(),
+                      ),
+                    ),
+                  );
+                },
+                child: const Text(
+                  'Start',
+                  style: TextStyle(
+                    fontSize: 40,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF13B9FD),
+                  ),
+                ),
+              ),
+              const Spacer(),
+            ],
+          ),
         ),
       ),
+    );
+  }
+}
+
+class _ThumbShape extends RoundSliderThumbShape {
+  const _ThumbShape();
+
+  PaddleSliderValueIndicatorShape get _indicatorShape =>
+      const PaddleSliderValueIndicatorShape();
+
+  @override
+  void paint(
+    PaintingContext context,
+    Offset center, {
+    required Animation<double> activationAnimation,
+    required Animation<double> enableAnimation,
+    required bool isDiscrete,
+    required TextPainter labelPainter,
+    required RenderBox parentBox,
+    required SliderThemeData sliderTheme,
+    required TextDirection textDirection,
+    required double value,
+    required double textScaleFactor,
+    required Size sizeWithOverflow,
+  }) {
+    super.paint(
+      context,
+      center,
+      activationAnimation: activationAnimation,
+      enableAnimation: enableAnimation,
+      isDiscrete: isDiscrete,
+      labelPainter: labelPainter,
+      parentBox: parentBox,
+      sliderTheme: sliderTheme,
+      textDirection: textDirection,
+      value: value,
+      textScaleFactor: textScaleFactor,
+      sizeWithOverflow: sizeWithOverflow,
+    );
+    _indicatorShape.paint(
+      context,
+      center,
+      activationAnimation: const AlwaysStoppedAnimation(1),
+      enableAnimation: enableAnimation,
+      isDiscrete: isDiscrete,
+      labelPainter: labelPainter,
+      parentBox: parentBox,
+      sliderTheme: sliderTheme,
+      textDirection: textDirection,
+      value: value,
+      textScaleFactor: textScaleFactor,
+      sizeWithOverflow: sizeWithOverflow,
     );
   }
 }
