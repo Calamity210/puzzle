@@ -6,12 +6,12 @@ class BackgroundPainter extends CustomPainter {
   const BackgroundPainter();
 
   List<Color> get colors => const [
-    Color(0xFF02569B),
-    Color(0xFF13B9FD),
-    Color(0xFF671DE5),
-    Color(0xFF750BB1),
-    Color(0xFFD5D7DA),
-  ];
+        Color(0xFF02569B),
+        Color(0xFF13B9FD),
+        Color(0xFF671DE5),
+        Color(0xFF750BB1),
+        Color(0xFFD5D7DA),
+      ];
 
   List<Path> generateRandomPolygonOrCircle(Size size) {
     final random = math.Random();
@@ -59,7 +59,8 @@ class BackgroundPainter extends CustomPainter {
 
     for (final path in paths) {
       final paint = Paint()
-        ..color = colors[math.Random().nextInt(colors.length)];
+        ..color =
+            colors[math.Random().nextInt(colors.length)].withOpacity(0.85);
       canvas.drawPath(path, paint);
     }
   }

@@ -9,7 +9,14 @@ import 'package:puzzle/game/level.dart';
 import 'package:puzzle/map/map.dart';
 
 class GamePage extends StatefulWidget {
-  const GamePage({Key? key}) : super(key: key);
+  const GamePage({
+    required this.mapSize,
+    required this.boxCount,
+    Key? key,
+  }) : super(key: key);
+
+  final int mapSize;
+  final int boxCount;
 
   @override
   State<GamePage> createState() => _GamePageState();
@@ -17,7 +24,7 @@ class GamePage extends StatefulWidget {
 
 class _GamePageState extends State<GamePage> {
   double tileSize = 50;
-  late final level = Level.newLevel(tileSize, 10, 3);
+  late final level = Level.newLevel(tileSize, widget.mapSize, widget.boxCount);
 
   @override
   void initState() {

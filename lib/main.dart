@@ -72,39 +72,92 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, c) {
-        return Container(
+        return Material(
           color: const Color(0xFF061547),
           child: CustomPaint(
+            isComplex: true,
             painter: const BackgroundPainter(),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                RepaintBoundary(
-                  child: TextButton(
-                    onPressed: () async {
-                      await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const GamePage(),
-                        ),
-                      );
-                    },
-                    child: const Text(
-                      'Start',
-                      style: TextStyle(
-                        fontSize: 40,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blue,
-                      ),
-                    ),
-                  ),
-                ),
+                LeftBar(width: c.maxWidth / 4),
                 DashParticles(imageSize: (c.maxHeight * 0.75).toInt()),
               ],
             ),
           ),
         );
       },
+    );
+  }
+}
+
+class LeftBar extends StatefulWidget {
+  const LeftBar({required this.width, Key? key}) : super(key: key);
+
+  final double width;
+
+  @override
+  _LeftBarState createState() => _LeftBarState();
+}
+
+class _LeftBarState extends State<LeftBar> {
+  var _mapSize = 10.0;
+  var _boxCount = 3.0;
+
+  @override
+  Widget build(BuildContext context) {
+    return RepaintBoundary(
+      child: Container(
+        color: Colors.black.withOpacity(0.4),
+        width: widget.width,
+        child: Column(
+          children: [
+            const Spacer(),
+            const Text('Map Size', style: TextStyle(color: Colors.white)),
+            Slider(
+              label: '$_mapSize',
+              value: _mapSize,
+              min: 10,
+              max: 15,
+              divisions: 5,
+              onChanged: (value) => setState(() => _mapSize = value),
+            ),
+            const Spacer(),
+            const Text('Box Count', style: TextStyle(color: Colors.white)),
+            Slider(
+              label: '$_boxCount',
+              value: _boxCount,
+              min: 3,
+              max: 6,
+              divisions: 3,
+              onChanged: (value) => setState(() => _boxCount = value),
+            ),
+            const Spacer(),
+            TextButton(
+              onPressed: () async {
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => GamePage(
+                      mapSize: _mapSize.toInt(),
+                      boxCount: _boxCount.toInt(),
+                    ),
+                  ),
+                );
+              },
+              child: const Text(
+                'Start',
+                style: TextStyle(
+                  fontSize: 40,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blue,
+                ),
+              ),
+            ),
+            const Spacer(),
+          ],
+        ),
+      ),
     );
   }
 }
