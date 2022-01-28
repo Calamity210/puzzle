@@ -15,11 +15,16 @@ Future<void> main() async {
     await Flame.device.fullScreen();
   }
 
+  FlameAudio.bgm.initialize();
+
   await FlameAudio.audioCache.loadAll([
     'sfx/click.mp3',
     'sfx/restart.wav',
     'sfx/win.wav',
+    'sfx/place.flac',
   ]);
+
+  await FlameAudio.bgm.load('bg.mp3');
 
   async.unawaited(
     Flame.images.loadAll([
@@ -82,10 +87,12 @@ class HomePage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 LeftBar(width: c.maxWidth / 4),
+                const Spacer(flex: 8),
                 Align(
-                  alignment: Alignment.bottomRight,
+                  alignment: Alignment.bottomCenter,
                   child: DashParticles(imageSize: (c.maxHeight * 0.8).toInt()),
                 ),
+                const Spacer(flex: 2),
               ],
             ),
           ),

@@ -35,6 +35,11 @@ class Dash extends SimplePlayer with Lighting, ObjectCollision {
   }
 
   @override
+  void joystickChangeDirectional(JoystickDirectionalEvent event) {
+    super.joystickChangeDirectional(event);
+  }
+
+  @override
   void joystickAction(JoystickActionEvent event) {
     final game = Provider.of<Game>(gameRef.context, listen: false);
 

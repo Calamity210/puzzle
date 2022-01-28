@@ -64,7 +64,10 @@ class Box extends GameDecoration
     if (level.destinations.any(checkIfSolved)) {
       if (!data.placed) {
         _boxAnimation.play(BoxAnimationEnum.transition);
-        FlameAudio.audioCache.play('sfx/click.mp3');
+        FlameAudio.audioCache.play(
+          'sfx/place.flac',
+          volume: 0.65,
+        );
         setLighting(0.4);
         data.placed = true;
         checkForWin();
