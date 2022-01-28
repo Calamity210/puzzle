@@ -108,15 +108,19 @@ class Box extends GameDecoration
 
   bool checkIfSolved(Destination d) {
     final x = d.x * tileSize;
-    final xEnd = x + tileSize;
+    final xCenterStart = x + tileSize * 0.33;
+    final xCenterEnd = x + tileSize * 0.7;
+
     final y = d.y * tileSize;
-    final yEnd = y + tileSize;
+    final yCenterStart = y + tileSize * 0.33;
+    final yCenterEnd = y + tileSize * 0.7;
     final boxEnd = position + Vector2.all(tileSize * 0.9);
 
-    if (position.x == position.x.clamp(x, xEnd) &&
-        position.y == position.y.clamp(y, yEnd) &&
-        boxEnd.x == boxEnd.x.clamp(x, xEnd) &&
-        boxEnd.y == boxEnd.y.clamp(y, yEnd)) {
+    // It doesn't have to be the exact position, it just has to cover the center
+    if (position.x < xCenterStart &&
+        boxEnd.x > xCenterEnd &&
+        position.y < yCenterStart &&
+        boxEnd.y > yCenterEnd) {
       d.placed = true;
       data.placedOn = d;
       return true;
