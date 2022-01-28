@@ -22,6 +22,7 @@ Future<void> main() async {
     'sfx/restart.wav',
     'sfx/win.wav',
     'sfx/place.flac',
+    'sfx/beep.wav',
   ]);
 
   await FlameAudio.bgm.load('bg.mp3');
@@ -167,6 +168,7 @@ class _LeftBarState extends State<LeftBar> {
               const Spacer(),
               TextButton(
                 onPressed: () async {
+                  FlameAudio.audioCache.play('sfx/beep.wav');
                   await Navigator.push(
                     context,
                     MaterialPageRoute(
