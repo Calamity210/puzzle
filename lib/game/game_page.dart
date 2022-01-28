@@ -23,13 +23,13 @@ class GamePage extends StatefulWidget {
 }
 
 class _GamePageState extends State<GamePage> {
-  double tileSize = 50;
+  double tileSize = 40;
   late final level = Level.newLevel(tileSize, widget.mapSize, widget.boxCount);
 
   @override
   void initState() {
     if (kIsWeb || !Platform.isAndroid && !Platform.isIOS) {
-      tileSize = 100;
+      tileSize = 90;
     }
 
     super.initState();

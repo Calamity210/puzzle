@@ -84,7 +84,7 @@ class HomePage extends StatelessWidget {
                 LeftBar(width: c.maxWidth / 4),
                 Align(
                   alignment: Alignment.bottomRight,
-                  child: DashParticles(imageSize: (c.maxHeight * 0.75).toInt()),
+                  child: DashParticles(imageSize: (c.maxHeight * 0.8).toInt()),
                 ),
               ],
             ),
@@ -128,6 +128,7 @@ class _LeftBarState extends State<LeftBar> {
                 'Map Size',
                 style: TextStyle(
                   color: Colors.white,
+                  fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -144,6 +145,7 @@ class _LeftBarState extends State<LeftBar> {
                 'Box Count',
                 style: TextStyle(
                   color: Colors.white,
+                  fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
               ),
