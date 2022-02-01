@@ -13,7 +13,7 @@ class Dash extends SimplePlayer with Lighting, ObjectCollision {
           size: Vector2(tileSize * 0.92, tileSize),
           position: position,
           life: 200,
-          speed: 128,
+          speed: 175,
         ) {
     setupLighting(
       LightingConfig(

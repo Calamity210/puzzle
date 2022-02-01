@@ -17,7 +17,7 @@ class Box extends GameDecoration
               data.position.vector2(tileSize) + Vector2.all(tileSize * 0.05),
           size: Vector2.all(tileSize * 0.9),
         ) {
-    speed = 128;
+    speed = 175;
 
     setLighting();
     setupCollision(
