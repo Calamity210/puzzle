@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:puzzle/game/level.dart';
 import 'package:puzzle/items/box.dart';
 import 'package:puzzle/pathfinder/node.dart';
+import 'package:puzzle/utils/extensions.dart';
 
 class GameMap {
   GameMap({required this.level, this.tileSize = 50}) {
@@ -50,50 +51,53 @@ class GameMap {
 
   void solve(BonfireGameInterface gameRef) {
     if (boxes.any((b) => !b.data.placed)) {
-      final unsolvedBoxes = boxes.reversed.where((b) => !b.data.placed);
-      final destinations = level.destinations.where((d) => !d.placed);
-      boxes:
+      final reversedBoxes = boxes.reversed;
+      final unsolvedBoxes = reversedBoxes.where((b) => !b.data.placed);
+      final solvedBoxes = reversedBoxes.where((b) => b.data.placed);
       for (final box in unsolvedBoxes) {
-        for (final destination in destinations) {
-          box.messageShown = false;
-          box.moveToPositionAlongThePath(
-            GameMap.getRelativeTilePosition(
-              tileSize,
-              destination.x,
-              destination.y,
-            ),
+        final destination = box.data.destination;
+        if (destination.placed) {
+          final newBox =
+              solvedBoxes.firstWhere((b) => b.data.placedOn == destination);
+          newBox.moveToPositionAlongThePath(
+            newBox.data.position.vector2(tileSize),
           );
+        }
+        box.messageShown = false;
+        box.moveToPositionAlongThePath(
+          GameMap.getRelativeTilePosition(
+            tileSize,
+            destination.x,
+            destination.y,
+          ),
+        );
 
-          if (!box.isMovingAlongThePath) {
-            if (destination != destinations.last) {
-              continue;
-            } else if (box != unsolvedBoxes.last) {
-              continue boxes;
-            }
-
-            TalkDialog.show(
-              gameRef.context,
-              [
-                Say(
-                  text: [
-                    const TextSpan(
-                      text:
-                          "Hmm... the box can't seem to reach the destination point",
-                    ),
-                  ],
-                ),
-                Say(
-                  text: [
-                    const TextSpan(
-                      text: 'Can you see the box? Are we blocking the way?',
-                    ),
-                  ],
-                ),
-              ],
-              dismissible: true,
-            );
+        if (!box.isMovingAlongThePath) {
+          if (box != unsolvedBoxes.last) {
+            continue;
           }
-          break;
+
+          TalkDialog.show(
+            gameRef.context,
+            [
+              Say(
+                text: [
+                  const TextSpan(
+                    text:
+                        "Hmm... the box can't seem to reach the destination point",
+                  ),
+                ],
+              ),
+              Say(
+                text: [
+                  const TextSpan(
+                    text: 'Can you see the box? Are we blocking the way?',
+                  ),
+                ],
+              ),
+            ],
+            dismissible: true,
+          );
         }
         break;
       }

@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:puzzle/game/game.dart';
 import 'package:puzzle/map/map.dart';
 import 'package:puzzle/player/dash_sprite_sheet.dart';
+import 'package:puzzle/utils/generator.dart';
 
 class Dash extends SimplePlayer with Lighting, ObjectCollision {
   Dash(Vector2 position, double tileSize)
@@ -32,11 +33,6 @@ class Dash extends SimplePlayer with Lighting, ObjectCollision {
         ],
       ),
     );
-  }
-
-  @override
-  void joystickChangeDirectional(JoystickDirectionalEvent event) {
-    super.joystickChangeDirectional(event);
   }
 
   @override

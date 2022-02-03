@@ -4,13 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:puzzle/game/level.dart';
 import 'package:puzzle/items/box_animation.dart';
 import 'package:puzzle/items/box_sprite_sheet.dart';
+import 'package:puzzle/pathfinder/custom_move_to_position_along_the_path.dart';
 import 'package:puzzle/pathfinder/node.dart';
 import 'package:puzzle/player/dash.dart';
 import 'package:puzzle/utils/destination.dart';
 import 'package:puzzle/utils/extensions.dart';
 
 class Box extends GameDecoration
-    with ObjectCollision, Movement, MoveToPositionAlongThePath, Lighting {
+    with ObjectCollision, Movement, CustomMoveToPositionAlongThePath, Lighting {
   Box(this.data, this.level, this.tileSize)
       : super(
           position:
