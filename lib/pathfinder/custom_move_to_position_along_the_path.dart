@@ -6,15 +6,6 @@ import 'package:bonfire/bonfire.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
-enum TypeResumeDirection {
-  axisX,
-  axisY,
-  topLeft,
-  bottomLeft,
-  topRight,
-  bottomRight,
-}
-
 mixin CustomMoveToPositionAlongThePath on Movement {
   static const REDUCTION_SPEED_DIAGONAL = 0.7;
   static const REDUCTION_TO_AVOID_ROUNDING_PROBLEMS = 4;
@@ -48,10 +39,7 @@ mixin CustomMoveToPositionAlongThePath on Movement {
     _gridSizeIsCollisionSize = gridSizeIsCollisionSize;
   }
 
-  void moveToPositionAlongThePath(
-    Vector2 position, {
-    List? ignoreCollisions,
-  }) {
+  void moveToPositionAlongThePath(Vector2 position, {List? ignoreCollisions}) {
     this.ignoreCollisions.clear();
     this.ignoreCollisions.add(this);
     if (ignoreCollisions != null) {
@@ -163,23 +151,15 @@ mixin CustomMoveToPositionAlongThePath on Movement {
         : player.center;
 
     final playerPosition = _getCenterPositionByTile(positionPlayer);
-
     final targetPosition = _getCenterPositionByTile(finalPosition);
-
     final columnsAdditional = ((gameRef.size.x / 2) / _tileSize).floor();
     final rowsAdditional = ((gameRef.size.y / 2) / _tileSize).floor();
 
-    final rows = max(
-          playerPosition.dy,
-          targetPosition.dy,
-        ).toInt() +
-        rowsAdditional;
+    final rows =
+        max(playerPosition.dy, targetPosition.dy).toInt() + rowsAdditional;
 
-    final columns = max(
-          playerPosition.dx,
-          targetPosition.dx,
-        ).toInt() +
-        columnsAdditional;
+    final columns =
+        max(playerPosition.dx, targetPosition.dx).toInt() + columnsAdditional;
 
     _barriers.clear();
 
@@ -189,8 +169,7 @@ mixin CustomMoveToPositionAlongThePath on Movement {
       }
     });
 
-    var result = <Offset>[];
-    var path = <Offset>[];
+    Iterable<Offset> result = [];
 
     if (_barriers.contains(targetPosition)) {
       stopMoveAlongThePath();
@@ -204,18 +183,15 @@ mixin CustomMoveToPositionAlongThePath on Movement {
         start: playerPosition,
         end: targetPosition,
         barriers: _barriers,
-      ).findThePath().toList();
+      ).findThePath();
 
       if (result.isNotEmpty || _isNeighbor(playerPosition, targetPosition)) {
-        path.add(playerPosition);
-        path.addAll(result.reversed);
-        path.add(targetPosition);
-        path = path.map((e) {
+        result = AStar.resumePath(result);
+        _currentPath = result.map((e) {
           return Offset(e.dx * _tileSize, e.dy * _tileSize)
               .translate(_tileSize / 2, _tileSize / 2);
         }).toList();
 
-        _currentPath = _resumePath(path);
         _currentIndex = 0;
       }
     } catch (e) {
@@ -223,10 +199,9 @@ mixin CustomMoveToPositionAlongThePath on Movement {
         print('ERROR(AStar):$e');
       }
     }
-    gameRef.map.setLinePath(path, _pathLineColor, _pathLineStrokeWidth);
+    gameRef.map.setLinePath(_currentPath, _pathLineColor, _pathLineStrokeWidth);
   }
 
-  /// Get size of the grid used on algorithm to calculate path
   double get _tileSize {
     var tileSize = 0.0;
     if (gameRef.map.tiles.isNotEmpty) {
@@ -296,102 +271,6 @@ mixin CustomMoveToPositionAlongThePath on Movement {
         _barriers.add(barrier);
       }
     }
-  }
-
-  List<Offset> _resumePath(List<Offset> path) {
-    var newPath = _resumeDirection(path, TypeResumeDirection.axisX);
-    newPath = _resumeDirection(newPath, TypeResumeDirection.axisY);
-    newPath = _resumeDirection(newPath, TypeResumeDirection.bottomLeft);
-    newPath = _resumeDirection(newPath, TypeResumeDirection.bottomRight);
-    newPath = _resumeDirection(newPath, TypeResumeDirection.topLeft);
-    newPath = _resumeDirection(newPath, TypeResumeDirection.topRight);
-    return newPath;
-  }
-
-  List<Offset> _resumeDirection(List<Offset> path, TypeResumeDirection type) {
-    final newPath = <Offset>[];
-    final listOffset = <List<Offset>>[];
-    var indexList = -1;
-    var currentX = 0;
-    var currentY = 0;
-
-    for (final point in path) {
-      final dxDiagonal = point.dx.floor();
-      final dyDiagonal = point.dy.floor();
-
-      switch (type) {
-        case TypeResumeDirection.axisX:
-          if (point.dx == currentX) {
-            listOffset[indexList].add(point);
-          } else {
-            listOffset.add([point]);
-            indexList++;
-          }
-          break;
-        case TypeResumeDirection.axisY:
-          if (point.dy == currentY) {
-            listOffset[indexList].add(point);
-          } else {
-            listOffset.add([point]);
-            indexList++;
-          }
-          break;
-        case TypeResumeDirection.topLeft:
-          final nextDxDiagonal = (currentX - _tileSize).floor();
-          final nextDyDiagonal = (currentY - _tileSize).floor();
-          if (dxDiagonal == nextDxDiagonal && dyDiagonal == nextDyDiagonal) {
-            listOffset[indexList].add(point);
-          } else {
-            listOffset.add([point]);
-            indexList++;
-          }
-          break;
-        case TypeResumeDirection.bottomLeft:
-          final nextDxDiagonal = (currentX - _tileSize).floor();
-          final nextDyDiagonal = (currentY + _tileSize).floor();
-          if (dxDiagonal == nextDxDiagonal && dyDiagonal == nextDyDiagonal) {
-            listOffset[indexList].add(point);
-          } else {
-            listOffset.add([point]);
-            indexList++;
-          }
-          break;
-        case TypeResumeDirection.topRight:
-          final nextDxDiagonal = (currentX + _tileSize).floor();
-          final nextDyDiagonal = (currentY - _tileSize).floor();
-          if (dxDiagonal == nextDxDiagonal && dyDiagonal == nextDyDiagonal) {
-            listOffset[indexList].add(point);
-          } else {
-            listOffset.add([point]);
-            indexList++;
-          }
-          break;
-        case TypeResumeDirection.bottomRight:
-          final nextDxDiagonal = (currentX + _tileSize).floor();
-          final nextDyDiagonal = (currentY + _tileSize).floor();
-          if (dxDiagonal == nextDxDiagonal && dyDiagonal == nextDyDiagonal) {
-            listOffset[indexList].add(point);
-          } else {
-            listOffset.add([point]);
-            indexList++;
-          }
-          break;
-      }
-
-      currentX = point.dx.toInt();
-      currentY = point.dy.toInt();
-    }
-
-    for (final element in listOffset) {
-      if (element.length > 1) {
-        newPath.add(element.first);
-        newPath.add(element.last);
-      } else {
-        newPath.add(element.first);
-      }
-    }
-
-    return newPath;
   }
 
   bool _isNeighbor(Offset playerPosition, Offset targetPosition) {
