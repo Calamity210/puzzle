@@ -1,6 +1,6 @@
-# Slide Puzzle
 ![Puzzle Banner][puzzle_banner]
 
+# Slide Puzzle
 ![Home][home]
 ![Game][game]
 
