@@ -204,7 +204,7 @@ mixin CustomMoveToPositionAlongThePath on Movement {
         start: playerPosition,
         end: targetPosition,
         barriers: _barriers,
-      ).findThePath();
+      ).findThePath().toList();
 
       if (result.isNotEmpty || _isNeighbor(playerPosition, targetPosition)) {
         path.add(playerPosition);

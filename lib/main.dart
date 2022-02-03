@@ -19,8 +19,8 @@ Future<void> main() async {
 Future<void> flameSetup() async {
   await Future.wait([
     if (!kIsWeb) ...[
-      Flame.device.setLandscape(),
       Flame.device.fullScreen(),
+      Flame.device.setLandscape(),
     ],
     AudioUtils.loadAll(),
     Flame.images.loadAll([
