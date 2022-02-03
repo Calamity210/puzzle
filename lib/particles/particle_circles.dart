@@ -28,7 +28,10 @@ class ParticleCircle {
   late double radius = originRadius;
 
   void updateState(
-      double mouseX, double mouseY, double repulsionChangeDistance) {
+    double mouseX,
+    double mouseY,
+    double repulsionChangeDistance,
+  ) {
     _updateStateByMouse(mouseX, mouseY, repulsionChangeDistance);
     _updateStateByOrigin();
     velocity.scale(0.95);
