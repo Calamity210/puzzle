@@ -9,7 +9,7 @@ A slide puzzle built for the [Flutter Puzzle Hack](https://flutterhack.devpost.c
 ---
 
 ## What is this?
-A submission for the [Flutter Puzzle Hack](https://flutterhack.devpost.com/) by Calamity210.
+A submission for the [Flutter Puzzle Hack](https://flutterhack.devpost.com/) 🧩 by Calamity210.
 
 The only real constraints we were given for this hack are:
 > All submissions must be slide puzzles. That means that the players “slide” a limited number of tiles into place to achieve a goal.
@@ -22,21 +22,21 @@ This game is the outcome, a sokoban-inspired sliding puzzle. It falls perfectly 
 
 ---
 
-## Features
+## Features 💡
 
 (Tap and drag your mouse or finger over the dash in the home page for a cool little animation).
 
 - Customizable difficulty.
 - Supports all flutter-supported platforms.
-- Supports both keyboard and joystick inputs.
-- Randomly Generated Maps (It never gets old!!!).
+- Supports both keyboard and joystick inputs. 🕹
+- Randomly Generated Maps (🎊 It never gets old 🎊).
 - Auto Solve (Click the help button, and it'll solve one box for you).
 - Restart (You can restart the same level if you messed up).
 - Fun (It has dash in it, why wouldn't it be fun?).
 
 ---
 
-## Running the Project
+## Running the Project 💻
 
 To run the project either use the launch configuration in VSCode/Android Studio or use the following command:
 
@@ -45,9 +45,9 @@ $ flutter run -d chrome
 ```
 
 ### Supported Platforms
-- [x] Web
-- [x] Mobile
-- [x] Desktop
+- [x] Web 💻
+- [x] Mobile 📱
+- [x] Desktop 🖥
 
 I've only tested the project on ios, macOS, android, and web.
 
