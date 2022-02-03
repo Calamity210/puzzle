@@ -62,6 +62,7 @@ class GameMap {
           newBox.moveToPositionAlongThePath(
             newBox.data.position.vector2(tileSize),
           );
+          break;
         }
         box.messageShown = false;
         box.moveToPositionAlongThePath(
