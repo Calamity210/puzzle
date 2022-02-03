@@ -7,7 +7,7 @@ class BoxSpriteSheet {
         SpriteAnimationData.sequenced(
           amount: 1,
           stepTime: 0.1,
-          textureSize: Vector2(32, 32),
+          textureSize: Vector2.all(32),
         ),
       );
 
@@ -16,7 +16,7 @@ class BoxSpriteSheet {
         SpriteAnimationData.sequenced(
           amount: 1,
           stepTime: 0.1,
-          textureSize: Vector2(32, 32),
+          textureSize: Vector2.all(32),
         ),
       );
 
@@ -25,7 +25,7 @@ class BoxSpriteSheet {
         SpriteAnimationData.sequenced(
           amount: 20,
           stepTime: 0.02,
-          textureSize: Vector2(32, 32),
+          textureSize: Vector2.all(32),
           loop: false,
         ),
       );

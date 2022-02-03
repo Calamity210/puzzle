@@ -1,5 +1,4 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:puzzle/game/game.dart';

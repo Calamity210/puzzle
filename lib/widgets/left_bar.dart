@@ -27,8 +27,8 @@ class _LeftBarState extends State<LeftBar> {
           data: const SliderThemeData(
             showValueIndicator: ShowValueIndicator.never,
             thumbShape: _ThumbShape(),
-            valueIndicatorColor: AppColors.lightBlue,
-            activeTrackColor: AppColors.lightBlue,
+            valueIndicatorColor: AppColors.skyBlue,
+            activeTrackColor: AppColors.skyBlue,
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -67,7 +67,7 @@ class _LeftBarState extends State<LeftBar> {
                   style: TextStyle(
                     fontSize: 40,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.lightBlue,
+                    color: AppColors.skyBlue,
                   ),
                 ),
               ),

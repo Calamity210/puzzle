@@ -4,10 +4,10 @@ import 'package:puzzle/items/box.dart';
 import 'package:puzzle/map/map.dart';
 import 'package:puzzle/pathfinder/node.dart';
 import 'package:puzzle/player/dash.dart';
-import 'package:puzzle/utils/destination.dart';
+import 'package:puzzle/items/destination.dart';
 import 'package:puzzle/utils/extensions.dart';
-import 'package:puzzle/utils/generator.dart';
-import 'package:puzzle/utils/optimizer.dart';
+import 'package:puzzle/pathfinder/generator.dart';
+import 'package:puzzle/pathfinder/optimizer.dart';
 
 class Level {
   Level({

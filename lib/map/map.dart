@@ -10,28 +10,26 @@ import 'package:puzzle/utils/extensions.dart';
 
 class GameMap {
   GameMap({required this.level, this.tileSize = 50}) {
-    boxes = [
-      for (final data in level.boxes) Box(data, level, tileSize),
-    ];
+    boxes = [for (final data in level.boxes) Box(data, level, tileSize)];
   }
 
   final Level level;
   final double tileSize;
 
+  List<Box> boxes = [];
   List<Node> walls = [];
 
+  final rand = Random();
+
   final wall = 'wall/wall.png';
-  final wall0 = 'wall/wall0.png';
-  final wall1 = 'wall/wall1.png';
-  final wall2 = 'wall/wall2.png';
-  final wall3 = 'wall/wall3.png';
-  final wall4 = 'wall/wall4.png';
-  final wall5 = 'wall/wall5.png';
-  final wall6 = 'wall/wall6.png';
-  final wall7 = 'wall/wall7.png';
-  final wallMossy = 'wall/wall_mossy.png';
-  final wallCracked1 = 'wall/wall_cracked1.png';
-  final wallCracked2 = 'wall/wall_cracked2.png';
+  final topWall = 'wall/wall0.png';
+  final leftWall = 'wall/wall1.png';
+  final bottomWall = 'wall/wall2.png';
+  final rightWall = 'wall/wall3.png';
+  final topLeftWall = 'wall/wall4.png';
+  final bottomLeftWall = 'wall/wall5.png';
+  final bottomRightWall = 'wall/wall6.png';
+  final topRightWall = 'wall/wall7.png';
   final floor0 = 'floor/floor0.png';
   final floor1 = 'floor/floor1.png';
   final floor2 = 'floor/floor2.png';
@@ -40,8 +38,6 @@ class GameMap {
   final floor5 = 'floor/floor5.png';
   final floor6 = 'floor/floor6.png';
   final destinationFloor = 'floor/destination.png';
-
-  List<Box> boxes = [];
 
   MapWorld get map => MapWorld([
         ..._getFloors(),
@@ -134,7 +130,7 @@ class GameMap {
       for (var y = 0; y < level.nodes.first.length; y++) {
         if (level.nodes[x][y].wall && !level.surrounded(x, y)) {
           var wall = getWall(x, y);
-          if (Random().nextInt(10) == 0 && wall != this.wall) {
+          if (rand.nextInt(10) == 0 && wall != this.wall) {
             final numberIndex = wall.indexOf('.') - 1;
             final number = wall[numberIndex];
             wall = wall.replaceRange(
@@ -182,7 +178,7 @@ class GameMap {
   }
 
   String randomFloor() {
-    switch (Random().nextInt(12)) {
+    switch (rand.nextInt(12)) {
       case 0:
         return floor1;
       case 1:
@@ -203,7 +199,7 @@ class GameMap {
   }
 
   bool isWall(int x, int y) =>
-      level.nodes[x][y].wall && !level.surrounded(x, y);
+      level.nodes[x][y].wall &&!level.surrounded(x, y);
 
   String getWall(int x, int y) {
     if (x > 0 &&
@@ -217,21 +213,21 @@ class GameMap {
 
       if (belowWall) {
         if (behindWall) {
-          return wall5;
+          return bottomLeftWall;
         }
 
         if (frontWall) {
-          return wall6;
+          return bottomRightWall;
         }
       }
 
       if (aboveWall) {
         if (behindWall) {
-          return wall4;
+          return topLeftWall;
         }
 
         if (frontWall) {
-          return wall7;
+          return topRightWall;
         }
       }
 
@@ -241,39 +237,39 @@ class GameMap {
 
       if (!aboveWall && !belowWall) {
         if (y < level.nodes.first.length / 2) {
-          return wall0;
+          return topWall;
         }
-        return wall2;
+        return bottomWall;
       }
 
       if (!behindWall) {
         if (x < level.nodes.length / 2) {
-          return wall1;
+          return leftWall;
         }
-        return wall3;
+        return rightWall;
       }
 
       if (!frontWall) {
         if (x > level.nodes.length / 2) {
-          return wall3;
+          return rightWall;
         }
-        return wall1;
+        return leftWall;
       }
     } else if (x == 0) {
       if (!isWall(x + 1, y)) {
-        return wall1;
+        return leftWall;
       }
     } else if (x == level.nodes.first.length - 1) {
       if (!isWall(x - 1, y)) {
-        return wall3;
+        return rightWall;
       }
     } else if (y == 0) {
       if (!isWall(x, y + 1)) {
-        return wall0;
+        return topWall;
       }
     } else if (y == level.nodes.length - 1) {
       if (!isWall(x, y - 1)) {
-        return wall2;
+        return bottomWall;
       }
     }
 

@@ -1,9 +1,9 @@
 import 'dart:math';
 
 import 'package:puzzle/game/level.dart';
+import 'package:puzzle/pathfinder/generator.dart';
 import 'package:puzzle/pathfinder/node.dart';
 import 'package:puzzle/pathfinder/pathfinder.dart';
-import 'package:puzzle/utils/generator.dart';
 
 const optPathCost = 4;
 const optPlayerCost = 4;

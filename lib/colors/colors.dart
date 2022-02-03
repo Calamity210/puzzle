@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 abstract class AppColors {
   static const Color darkBlue = Color(0xFF061547);
-  static const Color lightBlue = Color(0xFF13B9FD);
+  static const Color skyBlue = Color(0xFF13B9FD);
+  static const Color lightBlue = Color(0xFFC9F6F8);
   static const Color purple = Color(0xFF122164);
   static final Color translucentBlack = Colors.black.withOpacity(0.5);
   static const List<Color> backgroundColors = [

@@ -1,5 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:flutter/material.dart';
+import 'package:puzzle/colors/colors.dart';
 import 'package:puzzle/game/level.dart';
 import 'package:puzzle/items/box_animation.dart';
 import 'package:puzzle/items/box_sprite_sheet.dart';
@@ -7,7 +8,7 @@ import 'package:puzzle/pathfinder/custom_move_to_position_along_the_path.dart';
 import 'package:puzzle/pathfinder/node.dart';
 import 'package:puzzle/player/dash.dart';
 import 'package:puzzle/utils/audio_utils.dart';
-import 'package:puzzle/utils/destination.dart';
+import 'package:puzzle/items/destination.dart';
 import 'package:puzzle/utils/extensions.dart';
 
 class Box extends GameDecoration
@@ -30,33 +31,12 @@ class Box extends GameDecoration
     );
   }
 
-  final BoxAnimation _boxAnimation = BoxSpriteSheet.boxAnimation;
   final Level level;
   final double tileSize;
   final BoxData data;
+
+  final BoxAnimation _boxAnimation = BoxSpriteSheet.boxAnimation;
   bool messageShown = false;
-
-  @override
-  void render(Canvas c) {
-    super.render(c);
-    _boxAnimation.render(c);
-  }
-
-  @override
-  void update(double dt) {
-    if (isVisible) {
-      _boxAnimation.opacity = opacity;
-      _boxAnimation.update(dt, position, size);
-    }
-    super.update(dt);
-  }
-
-  @override
-  Future<void> onLoad() async {
-    await super.onLoad();
-    await _boxAnimation.onLoad();
-    _boxAnimation.play(BoxAnimationEnum.inactive);
-  }
 
   @override
   set position(Vector2 position) {
@@ -81,6 +61,28 @@ class Box extends GameDecoration
     }
   }
 
+  @override
+  void render(Canvas c) {
+    super.render(c);
+    _boxAnimation.render(c);
+  }
+
+  @override
+  void update(double dt) {
+    if (isVisible) {
+      _boxAnimation.opacity = opacity;
+      _boxAnimation.update(dt, position, size);
+    }
+    super.update(dt);
+  }
+
+  @override
+  Future<void> onLoad() async {
+    await super.onLoad();
+    await _boxAnimation.onLoad();
+    _boxAnimation.play(BoxAnimationEnum.inactive);
+  }
+
   void setLighting([double opacity = 0.2]) {
     setupLighting(
       LightingConfig(
@@ -90,7 +92,7 @@ class Box extends GameDecoration
         pulseVariation: 0.2,
         pulseSpeed: 0.5,
         pulseCurve: Curves.linear,
-        color: const Color(0xFFC9F6F8).withOpacity(opacity),
+        color: AppColors.lightBlue.withOpacity(opacity),
       ),
     );
   }
@@ -149,13 +151,7 @@ class Box extends GameDecoration
               ),
             ],
           ),
-          Say(
-            text: [
-              const TextSpan(
-                text: 'Is anything blocking the way?',
-              ),
-            ],
-          ),
+          Say(text: [const TextSpan(text: 'Is anything blocking the way?')]),
         ],
         dismissible: true,
       );

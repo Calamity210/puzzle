@@ -4,9 +4,9 @@ import 'package:puzzle/pathfinder/path.dart';
 import 'package:puzzle/utils/extensions.dart';
 
 const wallCost = 100;
+const boxCost = 10000;
 int pathCost = 1;
 int playerPathCost = -1;
-const boxCost = 10000;
 
 class Pathfinder {
   Pathfinder(this.level, this.startX, this.startY, this.endX, this.endY);

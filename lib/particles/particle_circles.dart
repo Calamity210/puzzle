@@ -7,9 +7,6 @@ import 'package:image/image.dart' as img;
 import 'package:puzzle/utils/extensions.dart';
 
 const fractionSize = 80;
-// const originCircleRadius = 12;
-
-double repulsionChangeDistance = 100;
 
 class ParticleCircle {
   ParticleCircle(this.origin, this.originRadius, this.color);
@@ -30,14 +27,19 @@ class ParticleCircle {
   late double gravity = 0.1;
   late double radius = originRadius;
 
-  void updateState(double mouseX, double mouseY) {
-    _updateStateByMouse(mouseX, mouseY);
+  void updateState(
+      double mouseX, double mouseY, double repulsionChangeDistance) {
+    _updateStateByMouse(mouseX, mouseY, repulsionChangeDistance);
     _updateStateByOrigin();
     velocity.scale(0.95);
     position.add(velocity);
   }
 
-  void _updateStateByMouse(double mouseX, double mouseY) {
+  void _updateStateByMouse(
+    double mouseX,
+    double mouseY,
+    double repulsionChangeDistance,
+  ) {
     final dx = mouseX - position.x;
     final dy = mouseY - position.y;
     final distance = sqrt(dx * dx + dy * dy);
@@ -109,10 +111,15 @@ class ImageParticles {
     }
   }
 
-  void draw(ui.Canvas canvas, [double? mouseX, double? mouseY]) {
+  void draw(
+    ui.Canvas canvas, [
+    double? mouseX,
+    double? mouseY,
+    double repulsionChangeDistance = 150,
+  ]) {
     for (final point in points) {
       if (mouseX != null && mouseY != null) {
-        point.updateState(mouseX, mouseY);
+        point.updateState(mouseX, mouseY, repulsionChangeDistance);
       }
 
       point.draw(canvas);
@@ -137,15 +144,21 @@ class ImageParticles {
 }
 
 class ImageParticlesPainter extends CustomPainter {
-  ImageParticlesPainter(this.imagePainter, this.mouseX, this.mouseY);
+  ImageParticlesPainter(
+    this.imagePainter,
+    this.mouseX,
+    this.mouseY,
+    this.repulsionChangeDistance,
+  );
 
   final ImageParticles imagePainter;
   final double mouseX;
   final double mouseY;
+  final double repulsionChangeDistance;
 
   @override
   void paint(ui.Canvas canvas, ui.Size size) =>
-      imagePainter.draw(canvas, mouseX, mouseY);
+      imagePainter.draw(canvas, mouseX, mouseY, repulsionChangeDistance);
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => true;

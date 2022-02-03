@@ -22,6 +22,8 @@ class _DashParticlesState extends State<DashParticles> {
   var _mouseX = 0.0;
   var _mouseY = 0.0;
 
+  double repulsionChangeDistance = 100;
+
   @override
   void initState() {
     super.initState();
@@ -62,7 +64,12 @@ class _DashParticlesState extends State<DashParticles> {
             return CustomPaint(
               isComplex: true,
               willChange: true,
-              painter: ImageParticlesPainter(snapshot.data!, _mouseX, _mouseY),
+              painter: ImageParticlesPainter(
+                snapshot.data!,
+                _mouseX,
+                _mouseY,
+                repulsionChangeDistance,
+              ),
               child: SizedBox(
                 height: widget.imageSize.toDouble(),
                 width: widget.imageSize.toDouble(),
