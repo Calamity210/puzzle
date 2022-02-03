@@ -23,6 +23,7 @@ Future<void> main() async {
     'sfx/win.wav',
     'sfx/place.flac',
     'sfx/beep.wav',
+    'sfx/slider-click.wav',
   ]);
 
   await FlameAudio.bgm.load('bg.mp3');
@@ -146,7 +147,10 @@ class _LeftBarState extends State<LeftBar> {
                 min: 10,
                 max: 15,
                 divisions: 5,
-                onChanged: (value) => setState(() => _mapSize = value),
+                onChanged: (value) {
+                  FlameAudio.audioCache.play('sfx/slider-click.wav');
+                  setState(() => _mapSize = value);
+                },
               ),
               const Spacer(),
               const Text(
@@ -163,7 +167,10 @@ class _LeftBarState extends State<LeftBar> {
                 min: 3,
                 max: 6,
                 divisions: 3,
-                onChanged: (value) => setState(() => _boxCount = value),
+                onChanged: (value) {
+                  FlameAudio.audioCache.play('sfx/slider-click.wav');
+                  setState(() => _boxCount = value);
+                },
               ),
               const Spacer(),
               TextButton(
