@@ -19,8 +19,10 @@ class Level {
   }
 
   factory Level.newLevel(double tileSize, int size, int boxesCount) {
+    final rand = Random();
     final level = Level(size: size, boxesCount: boxesCount);
-    level.rip(Random().nextInt(7) - 2);
+
+    level.rip(rand.nextInt(7) - 2);
     generatePaths(level);
 
     if (level.unsolvable) {
@@ -29,7 +31,7 @@ class Level {
 
     level.activeSpots = [];
     if (boxesCount < 6) {
-      optimizeLevel(level, Random().nextInt(2000) - 1000);
+      optimizeLevel(level, rand.nextInt(2000) - 1000);
     }
 
     return level
@@ -46,20 +48,23 @@ class Level {
   final int size;
   final int boxesCount;
 
+  late Dash player;
   int playerStartX = 0;
   int playerStartY = 0;
-
   late Node playerPosition;
 
-  late Dash player;
-
-  final List<Node> allowedSpots = [];
-  final List<Destination> destinations = [];
   final List<BoxData> boxes = [];
   final List ghostBoxes = [];
+
+  final List<Destination> destinations = [];
   late int solvedCount = boxesCount;
+  List activeSpots = [];
+
+  final List<Node> allowedSpots = [];
+
   bool unsolvable = false;
   bool solved = false;
+
   late final List<List<Node>> nodes = List.generate(
     size,
     (i) => List.generate(
@@ -67,7 +72,6 @@ class Level {
       (j) => Node(i, j),
     ),
   );
-  List activeSpots = [];
 
   void defineAllowedSpots() {
     for (var i = 2; i < nodes.length - 2; i++) {
@@ -80,24 +84,22 @@ class Level {
   void placeObjects(int boxesCount) {
     // Place destinations and boxes
     for (var i = 0; i < boxesCount; i++) {
-      final point = randomPoint();
-      if (point != null) {
-        destinations.add(Destination(point.x, point.y));
+      final dPoint = randomPoint();
+      if (dPoint != null) {
+        destinations.add(Destination(dPoint.x, dPoint.y));
       }
-    }
 
-    for (var i = 0; i < boxesCount; i++) {
-      final point = randomPoint();
+      final bPoint = randomPoint();
 
-      if (point != null) {
-        boxes.add(BoxData(point, destinations[i]));
-        nodes[point.x][point.y].hasBox = true;
+      if (bPoint != null) {
+        boxes.add(BoxData(bPoint, destinations[i]));
+        nodes[bPoint.x][bPoint.y].hasBox = true;
       }
     }
 
     // Place player
     final pPoint =
-        randomPoint() ?? Node(destinations.first.x, destinations.first.y);
+        randomPoint() ?? Node(destinations.first.x, destinations.first.y,);
 
     playerPosition = Node(pPoint.x, pPoint.y);
     playerStartX = playerPosition.x;
@@ -112,8 +114,10 @@ class Level {
     final rand = Random().nextInt(allowedSpots.length);
     final x = allowedSpots[rand].x;
     final y = allowedSpots[rand].y;
+
     allowedSpots.removeAt(rand);
     nodes[x][y].wall = false;
+
     if (_blocked(x, y)) {
       return randomPoint();
     }

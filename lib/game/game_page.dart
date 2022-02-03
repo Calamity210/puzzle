@@ -4,6 +4,7 @@ import 'package:bonfire/bonfire.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:puzzle/colors/colors.dart';
 import 'package:puzzle/game/game.dart';
 import 'package:puzzle/game/level.dart';
 import 'package:puzzle/map/map.dart';
@@ -66,7 +67,7 @@ class _GamePageState extends State<GamePage> {
             map: game.map.map,
             player: game.level.player,
             decorations: game.map.boxes,
-            background: BackgroundColorGame(const Color(0xFF122164)),
+            background: BackgroundColorGame(AppColors.purple),
           );
         },
       ),

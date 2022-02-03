@@ -1,5 +1,4 @@
 import 'package:bonfire/bonfire.dart';
-import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
 import 'package:puzzle/game/level.dart';
 import 'package:puzzle/items/box_animation.dart';
@@ -31,7 +30,7 @@ class Box extends GameDecoration
     );
   }
 
-  late final BoxAnimation _boxAnimation = BoxSpriteSheet.boxAnimation;
+  final BoxAnimation _boxAnimation = BoxSpriteSheet.boxAnimation;
   final Level level;
   final double tileSize;
   final BoxData data;
