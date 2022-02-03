@@ -49,6 +49,7 @@ $ flutter run -d chrome
 - [x] Desktop
 
 I've only tested the project on ios, macOS, android, and web.
+
 ---
 
 
