@@ -1,4 +1,5 @@
 # Slide Puzzle
+![Puzzle Banner][puzzle_banner]
 
 ![Home][home]
 ![Game][game]
@@ -53,5 +54,6 @@ I've only tested the project on ios, macOS, android, and web.
 ---
 
 
+[puzzle_banner]: art/puzzle_banner.png
 [home]: art/home.png
 [game]: art/game.png
