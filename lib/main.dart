@@ -1,4 +1,5 @@
 import 'dart:async' as async;
+import 'dart:math';
 
 import 'package:bonfire/bonfire.dart';
 import 'package:flame_audio/flame_audio.dart';
@@ -92,7 +93,9 @@ class HomePage extends StatelessWidget {
                 const Spacer(flex: 8),
                 Align(
                   alignment: Alignment.bottomCenter,
-                  child: DashParticles(imageSize: (c.maxHeight * 0.8).toInt()),
+                  child: DashParticles(
+                    imageSize: (min(c.maxHeight, c.maxWidth) * 0.8).toInt(),
+                  ),
                 ),
                 const Spacer(flex: 2),
               ],
