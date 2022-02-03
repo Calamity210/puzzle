@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:puzzle/game/game.dart';
 import 'package:puzzle/map/map.dart';
 import 'package:puzzle/player/dash_sprite_sheet.dart';
-import 'package:puzzle/utils/generator.dart';
+import 'package:puzzle/utils/audio_utils.dart';
 
 class Dash extends SimplePlayer with Lighting, ObjectCollision {
   Dash(Vector2 position, double tileSize)
@@ -14,7 +14,7 @@ class Dash extends SimplePlayer with Lighting, ObjectCollision {
           size: Vector2(tileSize * 0.92, tileSize),
           position: position,
           life: 200,
-          speed: 175,
+          speed: 128,
         ) {
     setupLighting(
       LightingConfig(
@@ -47,7 +47,7 @@ class Dash extends SimplePlayer with Lighting, ObjectCollision {
         break;
       case 'restart':
         if (event.event == ActionEvent.UP) {
-          FlameAudio.audioCache.play('sfx/restart.wav');
+          AudioUtils.playRestart();
           position = GameMap.getRelativeTilePosition(
             game.map.tileSize,
             game.level.playerStartX,
@@ -55,6 +55,9 @@ class Dash extends SimplePlayer with Lighting, ObjectCollision {
           );
 
           for (final box in game.map.boxes) {
+            if (box.isMovingAlongThePath) {
+              box.stopMoveAlongThePath();
+            }
             box.reset();
           }
         }

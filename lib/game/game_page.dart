@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:bonfire/bonfire.dart';
-import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -24,7 +23,7 @@ class GamePage extends StatefulWidget {
 }
 
 class _GamePageState extends State<GamePage> {
-  double tileSize = 40;
+  double tileSize = 60;
   late final level = Level.newLevel(tileSize, widget.mapSize, widget.boxCount);
 
   @override

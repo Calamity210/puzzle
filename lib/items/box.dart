@@ -7,6 +7,7 @@ import 'package:puzzle/items/box_sprite_sheet.dart';
 import 'package:puzzle/pathfinder/custom_move_to_position_along_the_path.dart';
 import 'package:puzzle/pathfinder/node.dart';
 import 'package:puzzle/player/dash.dart';
+import 'package:puzzle/utils/audio_utils.dart';
 import 'package:puzzle/utils/destination.dart';
 import 'package:puzzle/utils/extensions.dart';
 
@@ -18,7 +19,7 @@ class Box extends GameDecoration
               data.position.vector2(tileSize) + Vector2.all(tileSize * 0.05),
           size: Vector2.all(tileSize * 0.9),
         ) {
-    speed = 175;
+    speed = 128;
 
     setLighting();
     setupCollision(
@@ -65,10 +66,7 @@ class Box extends GameDecoration
     if (level.destinations.any(checkIfSolved)) {
       if (!data.placed) {
         _boxAnimation.play(BoxAnimationEnum.transition);
-        FlameAudio.audioCache.play(
-          'sfx/place.flac',
-          volume: 0.65,
-        );
+        AudioUtils.playPlace();
         setLighting(0.4);
         data.placed = true;
         checkForWin();
@@ -133,7 +131,7 @@ class Box extends GameDecoration
   void checkForWin() {
     if (!level.boxes.any((d) => !d.placed) && !level.solved) {
       level.solved = true;
-      FlameAudio.audioCache.play('sfx/win.wav');
+      AudioUtils.playWin();
       Navigator.of(gameRef.context).pop();
     }
   }
