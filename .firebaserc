@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "spiweb-332e2"
+  },
+  "targets": {
+    "spiweb-332e2": {
+      "hosting": {
+        "slidepuzzlehack": [
+          "slidepuzzlehack"
+        ]
+      }
+    }
+  }
+}

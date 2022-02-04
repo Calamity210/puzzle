@@ -47,14 +47,12 @@ class GameMap {
 
   void solve(BonfireGameInterface gameRef) {
     if (boxes.any((b) => !b.data.placed)) {
-      final reversedBoxes = boxes.reversed;
-      final unsolvedBoxes = reversedBoxes.where((b) => !b.data.placed);
-      final solvedBoxes = reversedBoxes.where((b) => b.data.placed);
+      final unsolvedBoxes = boxes.where((b) => !b.data.placed);
+      final solvedBoxes = boxes.where((b) => b.data.placed);
       for (final box in unsolvedBoxes) {
-        final destination = box.data.destination;
-        if (destination.placed) {
-          final newBox =
-              solvedBoxes.firstWhere((b) => b.data.placedOn == destination);
+        final dest = box.data.destination;
+        if (dest.placed) {
+          final newBox = solvedBoxes.firstWhere((b) => b.data.placedOn == dest);
           newBox.moveToPositionAlongThePath(
             newBox.data.position.vector2(tileSize),
           );
@@ -62,11 +60,7 @@ class GameMap {
         }
         box.messageShown = false;
         box.moveToPositionAlongThePath(
-          GameMap.getRelativeTilePosition(
-            tileSize,
-            destination.x,
-            destination.y,
-          ),
+          GameMap.getRelativeTilePosition(tileSize, dest.x, dest.y),
         );
 
         if (!box.isMovingAlongThePath) {
@@ -199,7 +193,7 @@ class GameMap {
   }
 
   bool isWall(int x, int y) =>
-      level.nodes[x][y].wall &&!level.surrounded(x, y);
+      level.nodes[x][y].wall && !level.surrounded(x, y);
 
   String getWall(int x, int y) {
     if (x > 0 &&
