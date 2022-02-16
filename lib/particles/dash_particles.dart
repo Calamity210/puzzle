@@ -16,7 +16,7 @@ class DashParticles extends StatefulWidget {
 }
 
 class _DashParticlesState extends State<DashParticles> {
-  late final Future<ImageParticles> getIP = getImageParticles();
+  late Future<ImageParticles> getIP = getImageParticles();
   async.Timer? _timer;
 
   var _mouseX = 0.0;
@@ -40,6 +40,12 @@ class _DashParticlesState extends State<DashParticles> {
     _timer = null;
 
     super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(DashParticles oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    getIP = getImageParticles();
   }
 
   Future<ImageParticles> getImageParticles() async {

@@ -13,7 +13,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await flameSetup();
-  runApp(const MaterialApp(home: HomePage()));
+  runApp(MaterialApp(home: HomePage()));
 }
 
 Future<void> flameSetup() async {
@@ -65,7 +65,9 @@ Future<void> flameSetup() async {
 }
 
 class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
+  HomePage({Key? key}) : super(key: key);
+
+  final maxSize = ValueNotifier<int>(0);
 
   @override
   Widget build(BuildContext context) {
@@ -82,8 +84,22 @@ class HomePage extends StatelessWidget {
                 const Spacer(flex: 8),
                 Align(
                   alignment: Alignment.bottomCenter,
-                  child: DashParticles(
-                    imageSize: (min(c.maxHeight, c.maxWidth) * 0.8).toInt(),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Text(
+                        'TAP & DRAG OVER ME',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      DashParticles(
+                        imageSize: (min(c.maxHeight, c.maxWidth) * 0.8).toInt(),
+                      ),
+                    ],
                   ),
                 ),
                 const Spacer(flex: 2),
