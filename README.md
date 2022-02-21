@@ -4,7 +4,7 @@
 ![Home][home]
 ![Game][game]
 
-A slide puzzle built for the [Flutter Puzzle Hack](https://flutterhack.devpost.com/) by Calamity210.
+A slide puzzle built for the [Flutter Puzzle Hack](https://flutterhack.devpost.com/) by Calamity210. You can try it out at https://slidepuzzlehack.web.app
 
 ---
 
