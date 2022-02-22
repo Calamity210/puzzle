@@ -1,6 +1,8 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:puzzle/colors/colors.dart';
+import 'package:puzzle/game/game.dart';
 import 'package:puzzle/game/level.dart';
 import 'package:puzzle/items/box_animation.dart';
 import 'package:puzzle/items/box_sprite_sheet.dart';
@@ -37,6 +39,8 @@ class Box extends GameDecoration
 
   final BoxAnimation _boxAnimation = BoxSpriteSheet.boxAnimation;
   bool messageShown = false;
+
+  final dashAsset = 'assets/images/dash/dash.png';
 
   @override
   set position(Vector2 position) {
@@ -129,11 +133,40 @@ class Box extends GameDecoration
     return false;
   }
 
-  void checkForWin() {
+  Future<void> checkForWin() async {
     if (!level.boxes.any((d) => !d.placed) && !level.solved) {
       level.solved = true;
       AudioUtils.playWin();
-      Navigator.of(gameRef.context).pop();
+
+      final game = Provider.of<Game>(gameRef.context, listen: false);
+
+      final endTime = DateTime.now();
+
+      final duration = endTime.difference(game.startTime);
+
+      TalkDialog.show(
+        context,
+        [
+          Say(
+            text: [
+              const TextSpan(text: 'Congratulations! You solved the puzzle!')
+            ],
+            person: Image.asset(dashAsset),
+            personSayDirection: PersonSayDirection.RIGHT,
+          ),
+          Say(
+            text: [
+              TextSpan(
+                text: 'It took you ${duration.inMinutes} minutes '
+                    'and ${duration.inSeconds % 60} seconds.',
+              )
+            ],
+            person: Image.asset(dashAsset),
+            personSayDirection: PersonSayDirection.RIGHT,
+          ),
+        ],
+        onClose: () => Navigator.of(gameRef.context).pop(),
+      );
     }
   }
 
@@ -150,8 +183,14 @@ class Box extends GameDecoration
                 text: "The box can't seem to reach the destination point",
               ),
             ],
+            person: Image.asset(dashAsset),
+            personSayDirection: PersonSayDirection.RIGHT,
           ),
-          Say(text: [const TextSpan(text: 'Is anything blocking the way?')]),
+          Say(
+            text: [const TextSpan(text: 'Is anything blocking the way?')],
+            person: Image.asset(dashAsset),
+            personSayDirection: PersonSayDirection.RIGHT,
+          ),
         ],
         dismissible: true,
       );

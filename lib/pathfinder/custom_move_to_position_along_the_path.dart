@@ -97,47 +97,34 @@ mixin CustomMoveToPositionAlongThePath on Movement {
     if (diffX.abs() < 0.01 && diffY.abs() < 0.01) {
       _goToNextPosition();
     } else {
+      var onMove = false;
       if (diffX.abs() > 0.01 && diffY.abs() > 0.01) {
         final displacementXDiagonal = displacementX * REDUCTION_SPEED_DIAGONAL;
         final displacementYDiagonal = displacementY * REDUCTION_SPEED_DIAGONAL;
         if (diffX > 0 && diffY > 0) {
-          moveDownRight(
-            displacementXDiagonal,
-            displacementYDiagonal,
-            onCollision: _goToNextPosition,
-          );
+          onMove = moveDownRight(displacementXDiagonal, displacementYDiagonal);
         } else if (diffX < 0 && diffY > 0) {
-          moveDownLeft(
-            displacementXDiagonal,
-            displacementYDiagonal,
-            onCollision: _goToNextPosition,
-          );
+          onMove = moveDownLeft(displacementXDiagonal, displacementYDiagonal);
         } else if (diffX > 0 && diffY < 0) {
-          moveUpRight(
-            displacementXDiagonal,
-            displacementYDiagonal,
-            onCollision: _goToNextPosition,
-          );
+          onMove = moveUpRight(displacementXDiagonal, displacementYDiagonal);
         } else if (diffX < 0 && diffY < 0) {
-          moveUpLeft(
-            displacementXDiagonal,
-            displacementYDiagonal,
-            onCollision: _goToNextPosition,
-          );
+          onMove = moveUpLeft(displacementXDiagonal, displacementYDiagonal);
         }
       } else if (diffX.abs() > 0.01) {
         if (diffX > 0) {
-          moveRight(displacementX, onCollision: _goToNextPosition);
+          onMove = moveRight(displacementX);
         } else if (diffX < 0) {
-          moveLeft(displacementX, onCollision: _goToNextPosition);
+          onMove = moveLeft(displacementX);
         }
       } else if (diffY.abs() > 0.01) {
         if (diffY > 0) {
-          moveDown(displacementY, onCollision: _goToNextPosition);
+          onMove = moveDown(displacementY);
         } else if (diffY < 0) {
-          moveUp(displacementY, onCollision: _goToNextPosition);
+          onMove = moveUp(displacementY);
         }
-      } else {
+      }
+
+      if (!onMove) {
         _goToNextPosition();
       }
     }
