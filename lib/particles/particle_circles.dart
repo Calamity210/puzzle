@@ -70,9 +70,11 @@ class ParticleCircle {
   }
 
   void draw(ui.Canvas c) {
-    final paint = ui.Paint()..color = color;
+    if (origin == position) {
+      return;
+    }
 
-    c.drawCircle(position.toOffset(), radius, paint);
+    c.drawCircle(position.toOffset(), radius, ui.Paint()..color = color);
   }
 }
 

@@ -17,30 +17,6 @@ class DashParticles extends StatefulWidget {
 
 class _DashParticlesState extends State<DashParticles> {
   late Future<ImageParticles> getIP = getImageParticles();
-  async.Timer? _timer;
-
-  var _mouseX = 0.0;
-  var _mouseY = 0.0;
-
-  double repulsionChangeDistance = 100;
-
-  @override
-  void initState() {
-    super.initState();
-    _timer = async.Timer.periodic(const Duration(milliseconds: 34), (timer) {
-      setState(() {
-        repulsionChangeDistance = max(0, repulsionChangeDistance - 1.5);
-      });
-    });
-  }
-
-  @override
-  void dispose() {
-    _timer?.cancel();
-    _timer = null;
-
-    super.dispose();
-  }
 
   @override
   void didUpdateWidget(DashParticles oldWidget) {
@@ -67,32 +43,78 @@ class _DashParticlesState extends State<DashParticles> {
         future: getIP,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return CustomPaint(
-              isComplex: true,
-              willChange: true,
-              painter: ImageParticlesPainter(
-                snapshot.data!,
-                _mouseX,
-                _mouseY,
-                repulsionChangeDistance,
-              ),
-              child: SizedBox(
-                height: widget.imageSize.toDouble(),
-                width: widget.imageSize.toDouble(),
-                child: GestureDetector(
-                  excludeFromSemantics: true,
-                  onPanUpdate: (details) {
-                    repulsionChangeDistance = 150;
-                    _mouseX = details.localPosition.dx;
-                    _mouseY = details.localPosition.dy;
-                  },
-                ),
-              ),
+            return DashWidget(
+              imagePainter: snapshot.data!,
+              imageSize: widget.imageSize.toDouble(),
             );
           }
 
           return const CircularProgressIndicator();
         },
+      ),
+    );
+  }
+}
+
+class DashWidget extends StatefulWidget {
+  const DashWidget({
+    required this.imagePainter,
+    required this.imageSize,
+    Key? key,
+  }) : super(key: key);
+
+  final ImageParticles imagePainter;
+  final double imageSize;
+
+  @override
+  _DashWidgetState createState() => _DashWidgetState();
+}
+
+class _DashWidgetState extends State<DashWidget> {
+  async.Timer? _timer;
+
+  var _mouseX = 0.0;
+  var _mouseY = 0.0;
+
+  double repulsionChangeDistance = 100;
+
+  @override
+  void initState() {
+    super.initState();
+    _timer = async.Timer.periodic(const Duration(milliseconds: 16), (timer) {
+      setState(() {
+        repulsionChangeDistance = max(0, repulsionChangeDistance - 1.5);
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    _timer = null;
+
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomPaint(
+      painter: ImageParticlesPainter(
+        widget.imagePainter,
+        _mouseX,
+        _mouseY,
+        repulsionChangeDistance,
+      ),
+      child: SizedBox.square(
+        dimension: widget.imageSize,
+        child: GestureDetector(
+          excludeFromSemantics: true,
+          onPanUpdate: (details) {
+            repulsionChangeDistance = 150;
+            _mouseX = details.localPosition.dx;
+            _mouseY = details.localPosition.dy;
+          },
+        ),
       ),
     );
   }
