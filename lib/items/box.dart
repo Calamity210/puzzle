@@ -1,7 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:puzzle/colors/colors.dart';
 import 'package:puzzle/game/game.dart';
 import 'package:puzzle/game/level.dart';
 import 'package:puzzle/items/box_animation.dart';
@@ -11,7 +10,9 @@ import 'package:puzzle/pathfinder/custom_move_to_position_along_the_path.dart';
 import 'package:puzzle/pathfinder/node.dart';
 import 'package:puzzle/player/dash.dart';
 import 'package:puzzle/utils/audio_utils.dart';
+import 'package:puzzle/utils/colors.dart';
 import 'package:puzzle/utils/extensions.dart';
+import 'package:puzzle/widgets/confetti_widget.dart';
 
 class Box extends GameDecoration
     with ObjectCollision, Movement, CustomMoveToPositionAlongThePath, Lighting {
@@ -39,6 +40,7 @@ class Box extends GameDecoration
 
   final BoxAnimation _boxAnimation = BoxSpriteSheet.boxAnimation;
   bool messageShown = false;
+  OverlayEntry? confettiOverlay;
 
   final dashAsset = 'assets/images/dash/dash.png';
 
@@ -144,6 +146,8 @@ class Box extends GameDecoration
 
       final duration = endTime.difference(game.startTime);
 
+      _showConfetti();
+
       TalkDialog.show(
         context,
         [
@@ -165,9 +169,20 @@ class Box extends GameDecoration
             personSayDirection: PersonSayDirection.RIGHT,
           ),
         ],
-        onClose: () => Navigator.of(gameRef.context).pop(),
+        onClose: () {
+          Navigator.of(gameRef.context).pop();
+          confettiOverlay?.remove();
+        },
       );
     }
+  }
+
+  void _showConfetti() {
+    confettiOverlay = OverlayEntry(
+      builder: (context) => const ConfettiWidget(),
+    );
+
+    Overlay.of(gameRef.context)?.insert(confettiOverlay!);
   }
 
   @override

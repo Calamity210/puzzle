@@ -4,8 +4,8 @@ import 'package:bonfire/bonfire.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:puzzle/background/background_painter.dart';
-import 'package:puzzle/colors/colors.dart';
-import 'package:puzzle/particles/dash_particles.dart';
+import 'package:puzzle/utils/colors.dart';
+import 'package:puzzle/painters/particles/dash_particles.dart';
 import 'package:puzzle/utils/audio_utils.dart';
 import 'package:puzzle/widgets/left_bar.dart';
 

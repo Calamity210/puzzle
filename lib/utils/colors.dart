@@ -13,4 +13,11 @@ abstract class AppColors {
     Color(0xFF750BB1),
     Color(0xFFD5D7DA),
   ];
+  static const List<Color> confettiColors = [
+    Color(0xFF00AEEF),
+    Color(0xFFEC008C),
+    Color(0xFF72C8B6),
+    Color(0xFFFDFF6A),
+    darkBlue,
+  ];
 }

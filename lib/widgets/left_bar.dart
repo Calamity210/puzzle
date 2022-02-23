@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:puzzle/colors/colors.dart';
+import 'package:puzzle/utils/colors.dart';
 import 'package:puzzle/game/game_page.dart';
 import 'package:puzzle/utils/audio_utils.dart';
 import 'package:puzzle/widgets/custom_slider.dart';

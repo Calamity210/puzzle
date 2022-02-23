@@ -4,7 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image/image.dart' as img;
-import 'package:puzzle/particles/particle_circles.dart';
+import 'package:puzzle/painters/particles/particle_circles.dart';
 
 class DashParticles extends StatefulWidget {
   const DashParticles({required this.imageSize, Key? key}) : super(key: key);

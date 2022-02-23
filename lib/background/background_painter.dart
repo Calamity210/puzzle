@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:puzzle/colors/colors.dart';
+import 'package:puzzle/utils/colors.dart';
 
 class BackgroundPainter extends CustomPainter {
   const BackgroundPainter();
