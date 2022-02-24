@@ -27,15 +27,17 @@ class ParticleCircle {
   late double gravity = 0.1;
   late double radius = originRadius;
 
-  void updateState(
+  bool updateState(
     double mouseX,
     double mouseY,
     double repulsionChangeDistance,
   ) {
+    final oldPosition = position.clone();
     _updateStateByMouse(mouseX, mouseY, repulsionChangeDistance);
     _updateStateByOrigin();
     velocity.scale(0.95);
     position.add(velocity);
+    return oldPosition != position;
   }
 
   void _updateStateByMouse(
@@ -119,11 +121,14 @@ class ImageParticles {
     double repulsionChangeDistance = 150,
   ]) {
     for (final point in points) {
+      var redraw = false;
       if (mouseX != null && mouseY != null) {
-        point.updateState(mouseX, mouseY, repulsionChangeDistance);
+        redraw = point.updateState(mouseX, mouseY, repulsionChangeDistance);
       }
 
-      point.draw(canvas);
+      if (redraw) {
+        point.draw(canvas);
+      }
     }
   }
 
