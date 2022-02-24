@@ -16,7 +16,7 @@ class ConfettiPainter extends CustomPainter {
         final rand = Random();
         confettis[i] = Confetti(
           x: rand.nextDouble() * size.width,
-          y: rand.nextDouble() * -size.height,
+          y: rand.nextDouble() * (-size.height/2),
           speed: rand.nextInt(2) - 1,
           size: rand.nextDouble() * (size.height / 50 - size.width / 25) +
               size.width / 25,
