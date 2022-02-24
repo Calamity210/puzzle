@@ -1,25 +1,28 @@
-import 'dart:async';
+import 'dart:async' as async;
 import 'dart:math';
 
+import 'package:bonfire/bonfire.dart';
 import 'package:flutter/material.dart';
 import 'package:puzzle/painters/confetti/confetti.dart';
 import 'package:puzzle/painters/confetti/confetti_painter.dart';
 
 class ConfettiWidget extends StatefulWidget {
-  const ConfettiWidget({Key? key}) : super(key: key);
+  const ConfettiWidget(this.size, {Key? key}) : super(key: key);
+
+  final Vector2 size;
 
   @override
   _ConfettiWidgetState createState() => _ConfettiWidgetState();
 }
 
 class _ConfettiWidgetState extends State<ConfettiWidget> {
-  Timer? _timer;
+  async.Timer? _timer;
   List<Confetti>? confettis;
 
   @override
   void initState() {
     super.initState();
-    _timer = Timer.periodic(const Duration(milliseconds: 16), (timer) {
+    _timer = async.Timer.periodic(const Duration(milliseconds: 16), (timer) {
       setState(() {});
     });
   }
@@ -34,7 +37,7 @@ class _ConfettiWidgetState extends State<ConfettiWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = Size(widget.size.x, widget.size.y - 100);
 
     confettis ??= List.generate(100, (i) {
       final rand = Random();

@@ -180,11 +180,10 @@ class Box extends GameDecoration
   void _showConfetti() {
     confettiOverlay = OverlayEntry(
       builder: (context) {
-        final size = MediaQuery.of(context).size;
         return Positioned(
-          height: size.height - 100,
-          width: size.width,
-          child: const ConfettiWidget(),
+          height: gameRef.size.y - 100,
+          width: gameRef.size.x,
+          child: ConfettiWidget(gameRef.size),
         );
       },
     );
