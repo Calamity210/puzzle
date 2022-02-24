@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:puzzle/painters/confetti/confetti.dart';
 
 class ConfettiPainter extends CustomPainter {

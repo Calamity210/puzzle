@@ -34,30 +34,23 @@ class _ConfettiWidgetState extends State<ConfettiWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 300,
-      child: LayoutBuilder(
-        builder: (context, c) {
-          final size = Size(c.maxWidth, c.maxHeight - 100);
+    final size = MediaQuery.of(context).size;
 
-          confettis ??= List.generate(100, (i) {
-            final rand = Random();
-            return Confetti(
-              x: rand.nextDouble() * size.width,
-              y: rand.nextDouble() * -size.height,
-              speed: rand.nextInt(2) - 1,
-              size:
-                  rand.nextDouble() * ((size.height / 50) - (size.width / 25)) +
-                      (size.width / 25),
-            );
-          });
+    confettis ??= List.generate(100, (i) {
+      final rand = Random();
+      return Confetti(
+        x: rand.nextDouble() * size.width,
+        y: rand.nextDouble() * -size.height,
+        speed: rand.nextInt(2) - 1,
+        size:
+        rand.nextDouble() * ((size.height / 50) - (size.width / 25)) +
+            (size.width / 25),
+      );
+    });
 
-          return CustomPaint(
-            painter: ConfettiPainter(confettis!),
-            size: size,
-          );
-        },
-      ),
+    return CustomPaint(
+      painter: ConfettiPainter(confettis!),
+      size: size,
     );
   }
 }
