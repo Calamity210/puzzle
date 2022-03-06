@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:bonfire/base/bonfire_game_interface.dart';
 import 'package:bonfire/bonfire.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:puzzle/game/level.dart';
 import 'package:puzzle/items/box.dart';
 import 'package:puzzle/pathfinder/node.dart';
@@ -78,6 +79,19 @@ class GameMap {
                         "Hmm... the box can't seem to reach the destination point",
                   ),
                 ],
+                bottom: Row(
+                  children: const [
+                    Icon(
+                      Icons.subdirectory_arrow_left_rounded,
+                      color: Colors.white,
+                    ),
+                    SizedBox(width: 8),
+                    Text(
+                      'Press enter or tap to continue',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ],
+                ),
               ),
               Say(
                 text: [
@@ -87,6 +101,7 @@ class GameMap {
                 ],
               ),
             ],
+            logicalKeyboardKeysToNext: [LogicalKeyboardKey.enter],
             dismissible: true,
           );
         }

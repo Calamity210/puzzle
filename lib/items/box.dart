@@ -1,5 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:puzzle/game/game.dart';
 import 'package:puzzle/game/level.dart';
@@ -157,6 +158,19 @@ class Box extends GameDecoration
             ],
             person: Image.asset(dashAsset),
             personSayDirection: PersonSayDirection.RIGHT,
+            bottom: Row(
+              children: const [
+                Icon(
+                  Icons.subdirectory_arrow_left_rounded,
+                  color: Colors.white,
+                ),
+                SizedBox(width: 8),
+                Text(
+                  'Press enter or tap to continue',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ],
+            ),
           ),
           Say(
             text: [
@@ -169,6 +183,7 @@ class Box extends GameDecoration
             personSayDirection: PersonSayDirection.RIGHT,
           ),
         ],
+        logicalKeyboardKeysToNext: [LogicalKeyboardKey.enter],
         onClose: () {
           Navigator.of(gameRef.context).pop();
           confettiOverlay?.remove();
@@ -206,6 +221,19 @@ class Box extends GameDecoration
             ],
             person: Image.asset(dashAsset),
             personSayDirection: PersonSayDirection.RIGHT,
+            bottom: Row(
+              children: const [
+                Icon(
+                  Icons.subdirectory_arrow_left_rounded,
+                  color: Colors.white,
+                ),
+                SizedBox(width: 8),
+                Text(
+                  'Press enter or tap to continue',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ],
+            ),
           ),
           Say(
             text: [const TextSpan(text: 'Is anything blocking the way?')],
@@ -213,6 +241,7 @@ class Box extends GameDecoration
             personSayDirection: PersonSayDirection.RIGHT,
           ),
         ],
+        logicalKeyboardKeysToNext: [LogicalKeyboardKey.enter],
         dismissible: true,
       );
     } else if (component is Dash) {
