@@ -1,6 +1,7 @@
 import 'dart:async' as async;
 import 'dart:math';
 
+import 'package:bonfire/bonfire.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image/image.dart' as img;
@@ -82,9 +83,13 @@ class _DashWidgetState extends State<DashWidget> {
   void initState() {
     super.initState();
     _timer = async.Timer.periodic(const Duration(milliseconds: 16), (timer) {
-      setState(() {
-        repulsionChangeDistance = max(0, repulsionChangeDistance - 1.5);
-      });
+      if (repulsionChangeDistance != 0 || widget.imagePainter.points
+          .where((p) => p.velocity.distanceTo(Vector2.zero()) > 0.5)
+          .isNotEmpty) {
+        setState(() {
+          repulsionChangeDistance = max(0, repulsionChangeDistance - 1.5);
+        });
+      }
     });
   }
 
@@ -99,7 +104,9 @@ class _DashWidgetState extends State<DashWidget> {
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
-      painter: ImageParticlesPainter(
+      isComplex: true,
+      willChange: true,
+      foregroundPainter: ImageParticlesPainter(
         widget.imagePainter,
         _mouseX,
         _mouseY,

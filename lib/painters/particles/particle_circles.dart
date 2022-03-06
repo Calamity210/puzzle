@@ -2,6 +2,7 @@ import 'dart:math';
 import 'dart:ui' as ui;
 
 import 'package:bonfire/bonfire.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
 import 'package:puzzle/utils/extensions.dart';
@@ -26,6 +27,8 @@ class ParticleCircle {
   late double mouseRepulsion = 1;
   late double gravity = 0.1;
   late double radius = originRadius;
+
+  late final ui.Paint paint = ui.Paint()..color = color..isAntiAlias = !kIsWeb;
 
   void updateState(
     double mouseX,
@@ -70,7 +73,7 @@ class ParticleCircle {
   }
 
   void draw(ui.Canvas c) {
-    c.drawCircle(position.toOffset(), radius, ui.Paint()..color = color);
+    c.drawCircle(position.toOffset(), radius, paint);
   }
 }
 
