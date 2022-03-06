@@ -77,7 +77,7 @@ class _DashWidgetState extends State<DashWidget> {
   var _mouseX = 0.0;
   var _mouseY = 0.0;
 
-  double repulsionChangeDistance = 100;
+  double repulsionChangeDistance = 150;
 
   @override
   void initState() {
@@ -87,7 +87,7 @@ class _DashWidgetState extends State<DashWidget> {
           .where((p) => p.velocity.distanceTo(Vector2.zero()) > 0.5)
           .isNotEmpty) {
         setState(() {
-          repulsionChangeDistance = max(0, repulsionChangeDistance - 1.5);
+          repulsionChangeDistance = max(0, repulsionChangeDistance - 0.75);
         });
       }
     });
