@@ -196,7 +196,7 @@ class Box extends GameDecoration
     confettiOverlay = OverlayEntry(
       builder: (context) {
         return Positioned(
-          height: gameRef.size.y - 100,
+          height: gameRef.size.y - 150,
           width: gameRef.size.x,
           child: ConfettiWidget(gameRef.size),
         );
