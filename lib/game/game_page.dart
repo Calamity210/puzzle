@@ -4,10 +4,10 @@ import 'package:bonfire/bonfire.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:puzzle/utils/colors.dart';
 import 'package:puzzle/game/game.dart';
 import 'package:puzzle/game/level.dart';
 import 'package:puzzle/map/map.dart';
+import 'package:puzzle/utils/colors.dart';
 
 class GamePage extends StatefulWidget {
   const GamePage({

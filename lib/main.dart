@@ -4,9 +4,9 @@ import 'package:bonfire/bonfire.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:puzzle/background/background_painter.dart';
-import 'package:puzzle/utils/colors.dart';
 import 'package:puzzle/painters/particles/dash_particles.dart';
 import 'package:puzzle/utils/audio_utils.dart';
+import 'package:puzzle/utils/colors.dart';
 import 'package:puzzle/widgets/left_bar.dart';
 
 Future<void> main() async {
@@ -80,7 +80,7 @@ class HomePage extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                LeftBar(width: c.maxWidth / 4),
+                LeftBar(width: c.maxWidth * 0.29),
                 const Spacer(flex: 8),
                 Align(
                   alignment: Alignment.bottomCenter,

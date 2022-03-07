@@ -7,8 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
 import 'package:puzzle/utils/extensions.dart';
 
-const fractionSize = 80;
-
 class ParticleCircle {
   ParticleCircle(this.origin, this.originRadius, this.color);
 
@@ -28,7 +26,9 @@ class ParticleCircle {
   late double gravity = 0.1;
   late double radius = originRadius;
 
-  late final ui.Paint paint = ui.Paint()..color = color..isAntiAlias = !kIsWeb;
+  late final ui.Paint paint = ui.Paint()
+    ..color = color
+    ..isAntiAlias = !kIsWeb;
 
   void updateState(
     double mouseX,
@@ -81,6 +81,8 @@ class ImageParticles {
   ImageParticles(this.image, int originCircleRadius) {
     createParticles(originCircleRadius);
   }
+
+  final fractionSize = 80;
 
   final img.Image image;
 
